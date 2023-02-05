@@ -3,48 +3,49 @@
   "version": "0.1.1",
   "description": "",
   "private": false,
-  "main": "dist/ens-validation.umd.js",
-  "module": "dist/ens-validation.es6.js",
+  "type": "module",
+  "main": "dist/ans-validation.umd.js",
+  "module": "dist/ans-validation.es6.js",
   "types": "dist/dts/index.d.ts",
   "unpkg": "dist/index.js",
   "scripts": {
     "test": "jest",
     "test:mem": "npm test -- --coverage --silent --logHeapUsage",
     "test:watch": "jest --watch",
-    "test:prod": "npm run test -- --coverage --no-cache",
-    "test:prepublish": "npm run lint && npm run test -- --silent --no-cache",
+    "test:prod": "yarn test -- --coverage --no-cache",
+    "test:prepublish": "yarn lint && yarn test -- --silent --no-cache",
     "tsc": "tsc --noEmit -p ./tsconfig.json",
     "format": "find ./src/ -name '*.ts*' | xargs prettier --write --config ./.prettierrc --config-precedence file-override",
     "remotedev": "remotedev --hostname=localhost --port=8000",
     "lint": "tslint --project .",
     "lint:fix": "tslint --project . --fix",
-    "prepare": "npm run build",
-    "build": "tsc -p ./tsconfig-build.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs",
-    "prepublishOnly": "rimraf node_modules && npm i && npm run tsc && npm run build",
+    "prepare": "build",
+    "build": "vite build",
+    "prepublishOnly": "rimraf node_modules && npm i && yarn tsc && yarn build",
     "precommit": "lint-staged",
     "report-coverage": " cat ./coverage/lcov.info | coveralls",
-    "prepush": "npm run lint && npm run tsc"
+    "prepush": "yarn lint && yarn tsc"
   },
   "lint-staged": {
     "{src,__test__}/**/*.ts": [
-      "npm run format",
-      "npm run lint:fix",
+      "yarn format",
+      "yarn lint:fix",
       "git add"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MyCryptoHQ/ens-validation.git"
+    "url": "git+https://github.com/onsol-labs/ans-validation.git"
   },
   "author": "MyCrypto <henry@mycrypto.com>",
-  "license": "MIT",
+  "licanse": "MIT",
   "bugs": {
-    "url": "https://github.com/MyCryptoHQ/ens-validation/issues"
+    "url": "https://github.com/onsol-labs/ans-validation/issues"
   },
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/MyCryptoHQ/ens-validation#readme",
+  "homepage": "https://github.com/onsol-labs/ans-validation#readme",
   "devDependencies": {
     "@rollup/plugin-json": "^4.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
@@ -63,6 +64,7 @@
     "jest": "^29.3.1",
     "lint-staged": "^7.0.5",
     "lodash": "^4.17.10",
+    "pkg": "^5.8.0",
     "prettier": "^1.12.1",
     "punycode": "^2.1.0",
     "regenerate": "^1.4.0",
@@ -71,6 +73,7 @@
     "rollup-plugin-dts": "^5.1.1",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-polyfill-node": "^0.12.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.34.1",
     "ts-jest": "^29.0.4",
@@ -78,6 +81,7 @@
     "tslint-config-prettier": "^1.12.0",
     "typescript": "^4.9.4",
     "utf8": "^3.0.0",
+    "vite": "^4.1.1",
     "xregexp": "^4.1.1"
   },
   "jest": {

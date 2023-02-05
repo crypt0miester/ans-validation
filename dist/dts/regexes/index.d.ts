@@ -1,0 +1,11 @@
+export declare const deviation: RegExp;
+export declare const nonAsciiLatin: RegExp;
+export declare const kanaCharacterException: RegExp;
+export declare const combiningDiacriticException: RegExp;
+export declare const cyrillicLikeLatin: RegExp;
+export declare const latinGreekCyrillicAscii: RegExp;
+export declare const recommended: RegExp;
+export declare const inclusion: RegExp;
+export declare const allowed: RegExp;
+export declare const removed: RegExp;
+export { dangerousPatterns } from './dangerous-patterns';

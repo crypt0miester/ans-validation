@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/lib",
+    "outDir": "./dist/dts",
     "target": "es6",
     "sourceMap": true,
     "strictNullChecks": true,
@@ -16,7 +16,6 @@
     "noEmitOnError": false,
     "noImplicitAny": true,
     "declaration": true,
-    "declarationDir": "./dts"
   },
   "include": ["./src/"],
   "inlineSources": true,
