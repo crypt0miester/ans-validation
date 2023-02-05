@@ -32,7 +32,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'ans-validation',
       // the proper extensions will be added
-      fileName: 'ans-validation',
+      fileName: 'index',
       formats: ['cjs', 'umd', 'es'],
     },
     output: [

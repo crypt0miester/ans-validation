@@ -1,69 +1,13 @@
-import du from "url";
-const J = 2147483647, T = 36, Cu = 1, Z = 26, bu = 38, hu = 700, fu = 72, gu = 128, Su = "-", xu = /^xn--/, yu = /[\x2E\u3002\uFF0E\uFF61]/g, Lu = {
-  overflow: "Overflow: input needs wider integers to process",
-  "not-basic": "Illegal input >= 0x80 (not a basic code point)",
-  "invalid-input": "Invalid input"
-}, z = T - Cu, R = Math.floor;
-function v(u) {
-  throw new RangeError(Lu[u]);
-}
-function Ru(u, F) {
-  const C = [];
-  let E = u.length;
-  for (; E--; )
-    C[E] = F(u[E]);
-  return C;
-}
-function wu(u, F) {
-  const C = u.split("@");
-  let E = "";
-  C.length > 1 && (E = C[0] + "@", u = C[1]), u = u.replace(yu, ".");
-  const A = u.split("."), a = Ru(A, F).join(".");
-  return E + a;
-}
-const Tu = function(u) {
-  return u - 48 < 10 ? u - 22 : u - 65 < 26 ? u - 65 : u - 97 < 26 ? u - 97 : T;
-}, ku = function(u, F, C) {
-  let E = 0;
-  for (u = C ? R(u / hu) : u >> 1, u += R(u / F); u > z * Z >> 1; E += T)
-    u = R(u / z);
-  return R(E + (z + 1) * u / (u + bu));
-}, Nu = function(u) {
-  const F = [], C = u.length;
-  let E = 0, A = gu, a = fu, n = u.lastIndexOf(Su);
-  n < 0 && (n = 0);
-  for (let e = 0; e < n; ++e)
-    u.charCodeAt(e) >= 128 && v("not-basic"), F.push(u.charCodeAt(e));
-  for (let e = n > 0 ? n + 1 : 0; e < C; ) {
-    let i = E;
-    for (let l = 1, B = T; ; B += T) {
-      e >= C && v("invalid-input");
-      const r = Tu(u.charCodeAt(e++));
-      (r >= T || r > R((J - E) / l)) && v("overflow"), E += r * l;
-      const m = B <= a ? Cu : B >= a + Z ? Z : B - a;
-      if (r < m)
-        break;
-      const s = T - m;
-      l > R(J / s) && v("overflow"), l *= s;
-    }
-    const t = F.length + 1;
-    a = ku(E - i, t, i == 0), R(E / t) > J - A && v("overflow"), A += R(E / t), E %= t, F.splice(E++, 0, A);
-  }
-  return String.fromCodePoint(...F);
-}, Mu = function(u) {
-  return wu(u, function(F) {
-    return xu.test(F) ? Nu(F.slice(4).toLowerCase()) : F;
-  });
-};
-class Ou {
+import lu from "url";
+class mu {
   constructor(F) {
-    this.hostname = F, this.labels = this.hostname.split(".").map(Mu), this.isTldAscii = !this.hostname.substring(this.hostname.lastIndexOf(".")).startsWith(".xn--"), this.isTld = this.hostname.substring(this.hostname.lastIndexOf(".")) === `.${this.hostname.lastIndexOf(".")}`;
+    this.hostname = F, this.labels = this.hostname.split("."), this.isTldAscii = !this.hostname.substring(this.hostname.lastIndexOf(".")).startsWith(".xn--"), this.isTld = this.hostname.substring(this.hostname.lastIndexOf(".")) === `.${this.hostname.lastIndexOf(".")}`;
   }
 }
-var G;
+var U;
 (function(u) {
   u[u.ZERO_ERROR = 0] = "ZERO_ERROR", u[u.SUCCESS = 1] = "SUCCESS", u[u.FAILURE = 2] = "FAILURE", u[u.INVALID_FORMAT_ERROR = 3] = "INVALID_FORMAT_ERROR", u[u.ILLEGAL_ARGUMENT_ERROR = 4] = "ILLEGAL_ARGUMENT_ERROR", u[u.MEMORY_ALLOCATION_ERROR = 5] = "MEMORY_ALLOCATION_ERROR";
-})(G || (G = {}));
+})(U || (U = {}));
 var g;
 (function(u) {
   u[u.ASCII = 268435456] = "ASCII", u[u.SINGLE_SCRIPT_RESTRICTIVE = 536870912] = "SINGLE_SCRIPT_RESTRICTIVE", u[u.HIGHLY_RESTRICTIVE = 805306368] = "HIGHLY_RESTRICTIVE", u[u.MODERATELY_RESTRICTIVE = 1073741824] = "MODERATELY_RESTRICTIVE", u[u.MINIMALLY_RESTRICTIVE = 1342177280] = "MINIMALLY_RESTRICTIVE", u[u.UNRESTRICTIVE = 1610612736] = "UNRESTRICTIVE", u[u.RESTRICTION_LEVEL_MASK = 2130706432] = "RESTRICTION_LEVEL_MASK", u[u.UNDEFINED_RESTRICTIVE = -1] = "UNDEFINED_RESTRICTIVE";
@@ -72,7 +16,7 @@ var f;
 (function(u) {
   u[u.SINGLE_SCRIPT_CONFUSABLE = 1] = "SINGLE_SCRIPT_CONFUSABLE", u[u.MIXED_SCRIPT_CONFUSABLE = 2] = "MIXED_SCRIPT_CONFUSABLE", u[u.WHOLE_SCRIPT_CONFUSABLE = 4] = "WHOLE_SCRIPT_CONFUSABLE", u[u.CONFUSABLE = 7] = "CONFUSABLE", u[u.RESTRICTION_LEVEL = 16] = "RESTRICTION_LEVEL", u[u.INVISIBLE = 32] = "INVISIBLE", u[u.CHAR_LIMIT = 64] = "CHAR_LIMIT", u[u.MIXED_NUMBERS = 128] = "MIXED_NUMBERS", u[u.ALL_CHECKS = 65535] = "ALL_CHECKS";
 })(f || (f = {}));
-class Pu {
+class ou {
   constructor() {
     this.checks = f.ALL_CHECKS, this.numerics = [], this.restrictionLevel = g.HIGHLY_RESTRICTIVE;
   }
@@ -85,24 +29,24 @@ class Pu {
  * <xregexp.com>
  * Steven Levithan (c) 2007-present MIT License
  */
-const o = "xregexp", k = {
+const o = "xregexp", T = {
   astral: !1,
   namespacing: !1
-}, c = {
+}, p = {
   exec: RegExp.prototype.exec,
   test: RegExp.prototype.test,
   match: String.prototype.match,
   replace: String.prototype.replace,
   split: String.prototype.split
 }, y = {};
-let $ = {}, O = {};
-const W = [], P = "default", uu = "class", Uu = {
+let P = {}, N = {};
+const V = [], M = "default", z = "class", pu = {
   // Any native multicharacter token in default scope, or any single character
   default: /\\(?:0(?:[0-3][0-7]{0,2}|[4-7][0-7]?)?|[1-9]\d*|x[\dA-Fa-f]{2}|u(?:[\dA-Fa-f]{4}|{[\dA-Fa-f]+})|c[A-Za-z]|[\s\S])|\(\?(?:[:=!]|<[=!])|[?*+]\?|{\d+(?:,\d*)?}\??|[\s\S]/,
   // Any native multicharacter token in character class scope, or any single character
   class: /\\(?:[0-3][0-7]{0,2}|[4-7][0-7]?|x[\dA-Fa-f]{2}|u(?:[\dA-Fa-f]{4}|{[\dA-Fa-f]+})|c[A-Za-z]|[\s\S])|[\s\S]/
-}, vu = /\$(?:{([\w$]+)}|<([\w$]+)>|(\d\d?|[\s\S]))/g, $u = c.exec.call(/()??/, "")[1] === void 0, Gu = /x/.flags !== void 0, { toString: Eu } = {};
-function q(u) {
+}, cu = /\$(?:{([\w$]+)}|<([\w$]+)>|(\d\d?|[\s\S]))/g, _u = p.exec.call(/()??/, "")[1] === void 0, Iu = /x/.flags !== void 0, { toString: q } = {};
+function j(u) {
   let F = !0;
   try {
     if (new RegExp("", u), u === "y") {
@@ -114,14 +58,14 @@ function q(u) {
   }
   return F;
 }
-const Au = q("u"), Q = q("y"), Bu = {
+const Q = j("u"), Y = j("y"), X = {
   g: !0,
   i: !0,
   m: !0,
-  u: Au,
-  y: Q
+  u: Q,
+  y: Y
 };
-function au(u, F, C, E, A) {
+function uu(u, F, C, E, A) {
   if (u[o] = {
     captureNames: F
   }, A)
@@ -133,26 +77,26 @@ function au(u, F, C, E, A) {
       u[a] = D.prototype[a];
   return u[o].source = C, u[o].flags = E && E.split("").sort().join(""), u;
 }
-function H(u) {
-  return c.replace.call(u, /([\s\S])(?=[\s\S]*\1)/g, "");
+function $(u) {
+  return p.replace.call(u, /([\s\S])(?=[\s\S]*\1)/g, "");
 }
-function N(u, F) {
+function k(u, F) {
   if (!D.isRegExp(u))
     throw new TypeError("Type RegExp expected");
   const C = u[o] || {};
-  let E = Hu(u), A = "", a = "", n = null, e = null;
-  return F = F || {}, F.removeG && (a += "g"), F.removeY && (a += "y"), a && (E = c.replace.call(E, new RegExp(`[${a}]+`, "g"), "")), F.addG && (A += "g"), F.addY && (A += "y"), A && (E = H(E + A)), F.isInternalOnly || (C.source !== void 0 && (n = C.source), C.flags != null && (e = A ? H(C.flags + A) : C.flags)), u = au(
+  let E = du(u), A = "", a = "", n = null, t = null;
+  return F = F || {}, F.removeG && (a += "g"), F.removeY && (a += "y"), a && (E = p.replace.call(E, new RegExp(`[${a}]+`, "g"), "")), F.addG && (A += "g"), F.addY && (A += "y"), A && (E = $(E + A)), F.isInternalOnly || (C.source !== void 0 && (n = C.source), C.flags != null && (t = A ? $(C.flags + A) : C.flags)), u = uu(
     new RegExp(F.source || u.source, E),
-    Ku(u) ? C.captureNames.slice(0) : null,
+    bu(u) ? C.captureNames.slice(0) : null,
     n,
-    e,
+    t,
     F.isInternalOnly
   ), u;
 }
-function nu(u) {
+function Du(u) {
   return parseInt(u, 16);
 }
-function eu(u, F, C) {
+function Fu(u, F, C) {
   return (
     // No need to separate tokens if at the beginning or end of a group
     u.input[u.index - 1] === "(" || u.input[u.index + u[0].length] === ")" || // No need to separate tokens if before or after a `|`
@@ -162,27 +106,27 @@ function eu(u, F, C) {
     // - The search regex matching only 3-char strings.
     // - Although `substr` gives chars from the end of the string if given a negative index,
     //   the resulting substring will be too short to match. Ex: `'abcd'.substr(-1, 3) === 'd'`
-    c.test.call(/^\(\?[:=!]/, u.input.substr(u.index - 3, 3)) || // Avoid separating tokens when the following token is a quantifier
-    Vu(u.input, u.index + u[0].length, C) ? "" : "(?:)"
+    p.test.call(/^\(\?[:=!]/, u.input.substr(u.index - 3, 3)) || // Avoid separating tokens when the following token is a quantifier
+    hu(u.input, u.index + u[0].length, C) ? "" : "(?:)"
   );
 }
-function Hu(u) {
-  return Gu ? u.flags : (
+function du(u) {
+  return Iu ? u.flags : (
     // Explicitly using `RegExp.prototype.toString` (rather than e.g. `String` or concatenation
     // with an empty string) allows this to continue working predictably when
     // `XRegExp.proptotype.toString` is overridden
-    c.exec.call(/\/([a-z]*)$/i, RegExp.prototype.toString.call(u))[1]
+    p.exec.call(/\/([a-z]*)$/i, RegExp.prototype.toString.call(u))[1]
   );
 }
-function Ku(u) {
+function bu(u) {
   return !!(u[o] && u[o].captureNames);
 }
-function tu(u) {
+function Cu(u) {
   return parseInt(u, 10).toString(16);
 }
-function Vu(u, F, C) {
+function hu(u, F, C) {
   const E = "\\(\\?#[^)]*\\)", A = "#[^#\\n]*", a = "[?*+]|{\\d+(?:,\\d*)?}";
-  return c.test.call(
+  return p.test.call(
     C.includes("x") ? (
       // Ignore any leading whitespace, line comments, and inline comments
       new RegExp(`^(?:\\s|${A}|${E})*(?:${a})`)
@@ -193,63 +137,63 @@ function Vu(u, F, C) {
     u.slice(F)
   );
 }
-function X(u, F) {
-  return Eu.call(u) === `[object ${F}]`;
+function J(u, F) {
+  return q.call(u) === `[object ${F}]`;
 }
-function ru(u) {
+function Eu(u) {
   for (; u.length < 4; )
     u = `0${u}`;
   return u;
 }
-function ju(u, F) {
-  if (H(F) !== F)
+function fu(u, F) {
+  if ($(F) !== F)
     throw new SyntaxError(`Invalid duplicate regex flag ${F}`);
-  u = c.replace.call(u, /^\(\?([\w$]+)\)/, (C, E) => {
-    if (c.test.call(/[gy]/, E))
+  u = p.replace.call(u, /^\(\?([\w$]+)\)/, (C, E) => {
+    if (p.test.call(/[gy]/, E))
       throw new SyntaxError(`Cannot use flag g or y in mode modifier ${C}`);
-    return F = H(F + E), "";
+    return F = $(F + E), "";
   });
   for (const C of F)
-    if (!Bu[C])
+    if (!X[C])
       throw new SyntaxError(`Unknown regex flag ${C}`);
   return {
     pattern: u,
     flags: F
   };
 }
-function iu(u) {
+function Au(u) {
   const F = {};
-  return X(u, "String") ? (D.forEach(u, /[^\s,]+/, (C) => {
+  return J(u, "String") ? (D.forEach(u, /[^\s,]+/, (C) => {
     F[C] = !0;
   }), F) : u;
 }
-function Du(u) {
+function Z(u) {
   if (!/^[\w$]$/.test(u))
     throw new Error("Flag must be a single character A-Za-z0-9_$");
-  Bu[u] = !0;
+  X[u] = !0;
 }
-function Yu(u, F, C, E, A) {
-  let a = W.length;
+function gu(u, F, C, E, A) {
+  let a = V.length;
   const n = u[C];
-  let e = null, i, t;
+  let t = null, i, e;
   for (; a--; )
-    if (t = W[a], !(t.leadChar && t.leadChar !== n || t.scope !== E && t.scope !== "all" || t.flag && !F.includes(t.flag)) && (i = D.exec(u, t.regex, C, "sticky"), i)) {
-      e = {
+    if (e = V[a], !(e.leadChar && e.leadChar !== n || e.scope !== E && e.scope !== "all" || e.flag && !F.includes(e.flag)) && (i = D.exec(u, e.regex, C, "sticky"), i)) {
+      t = {
         matchLength: i[0].length,
-        output: t.handler.call(A, i, E, F),
-        reparse: t.reparse
+        output: e.handler.call(A, i, E, F),
+        reparse: e.reparse
       };
       break;
     }
-  return e;
+  return t;
 }
-function su(u) {
-  k.astral = u;
+function Bu(u) {
+  T.astral = u;
 }
-function lu(u) {
-  k.namespacing = u;
+function au(u) {
+  T.namespacing = u;
 }
-function K(u) {
+function G(u) {
   if (u == null)
     throw new TypeError("Cannot convert null or undefined to object");
   return u;
@@ -258,41 +202,41 @@ function D(u, F) {
   if (D.isRegExp(u)) {
     if (F !== void 0)
       throw new TypeError("Cannot supply flags when copying a RegExp");
-    return N(u);
+    return k(u);
   }
-  if (u = u === void 0 ? "" : String(u), F = F === void 0 ? "" : String(F), D.isInstalled("astral") && !F.includes("A") && (F += "A"), O[u] || (O[u] = {}), !O[u][F]) {
+  if (u = u === void 0 ? "" : String(u), F = F === void 0 ? "" : String(F), D.isInstalled("astral") && !F.includes("A") && (F += "A"), N[u] || (N[u] = {}), !N[u][F]) {
     const E = {
       hasNamedCapture: !1,
       captureNames: []
     };
-    let A = P, a = "", n = 0, e;
-    const i = ju(u, F);
-    let t = i.pattern;
+    let A = M, a = "", n = 0, t;
+    const i = fu(u, F);
+    let e = i.pattern;
     const l = i.flags;
-    for (; n < t.length; ) {
+    for (; n < e.length; ) {
       do
-        e = Yu(t, l, n, A, E), e && e.reparse && (t = t.slice(0, n) + e.output + t.slice(n + e.matchLength));
-      while (e && e.reparse);
-      if (e)
-        a += e.output, n += e.matchLength || 1;
+        t = gu(e, l, n, A, E), t && t.reparse && (e = e.slice(0, n) + t.output + e.slice(n + t.matchLength));
+      while (t && t.reparse);
+      if (t)
+        a += t.output, n += t.matchLength || 1;
       else {
-        const [B] = D.exec(t, Uu[A], n, "sticky");
-        a += B, n += B.length, B === "[" && A === P ? A = uu : B === "]" && A === uu && (A = P);
+        const [B] = D.exec(e, pu[A], n, "sticky");
+        a += B, n += B.length, B === "[" && A === M ? A = z : B === "]" && A === z && (A = M);
       }
     }
-    O[u][F] = {
+    N[u][F] = {
       // Use basic cleanup to collapse repeated empty groups like `(?:)(?:)` to `(?:)`. Empty
       // groups are sometimes inserted during regex transpilation in order to keep tokens
       // separated. However, more than one empty group in a row is never needed.
-      pattern: c.replace.call(a, /(?:\(\?:\))+/g, "(?:)"),
+      pattern: p.replace.call(a, /(?:\(\?:\))+/g, "(?:)"),
       // Strip all but native flags
-      flags: c.replace.call(l, /[^gimuy]+/g, ""),
+      flags: p.replace.call(l, /[^gimuy]+/g, ""),
       // `context.captureNames` has an item for each capturing group, even if unnamed
       captures: E.hasNamedCapture ? E.captureNames : null
     };
   }
-  const C = O[u][F];
-  return au(
+  const C = N[u][F];
+  return uu(
     new RegExp(C.pattern, C.flags),
     C.captures,
     u,
@@ -301,68 +245,68 @@ function D(u, F) {
 }
 D.prototype = new RegExp();
 D.version = "4.4.1";
-D._clipDuplicates = H;
-D._hasNativeFlag = q;
-D._dec = nu;
-D._hex = tu;
-D._pad4 = ru;
+D._clipDuplicates = $;
+D._hasNativeFlag = j;
+D._dec = Du;
+D._hex = Cu;
+D._pad4 = Eu;
 D.addToken = (u, F, C) => {
   C = C || {};
   let { optionalFlags: E } = C;
-  if (C.flag && Du(C.flag), E) {
-    E = c.split.call(E, "");
+  if (C.flag && Z(C.flag), E) {
+    E = p.split.call(E, "");
     for (const A of E)
-      Du(A);
+      Z(A);
   }
-  W.push({
-    regex: N(u, {
+  V.push({
+    regex: k(u, {
       addG: !0,
-      addY: Q,
+      addY: Y,
       isInternalOnly: !0
     }),
     handler: F,
-    scope: C.scope || P,
+    scope: C.scope || M,
     flag: C.flag,
     reparse: C.reparse,
     leadChar: C.leadChar
   }), D.cache.flush("patterns");
 };
-D.cache = (u, F) => ($[u] || ($[u] = {}), $[u][F] || ($[u][F] = D(u, F)));
+D.cache = (u, F) => (P[u] || (P[u] = {}), P[u][F] || (P[u][F] = D(u, F)));
 D.cache.flush = (u) => {
-  u === "patterns" ? O = {} : $ = {};
+  u === "patterns" ? N = {} : P = {};
 };
-D.escape = (u) => c.replace.call(K(u), /[-\[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+D.escape = (u) => p.replace.call(G(u), /[-\[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 D.exec = (u, F, C, E) => {
-  let A = "g", a = !1, n = !1, e;
-  a = Q && !!(E || F.sticky && E !== !1), a ? A += "y" : E && (n = !0, A += "FakeY"), F[o] = F[o] || {};
-  const i = F[o][A] || (F[o][A] = N(F, {
+  let A = "g", a = !1, n = !1, t;
+  a = Y && !!(E || F.sticky && E !== !1), a ? A += "y" : E && (n = !0, A += "FakeY"), F[o] = F[o] || {};
+  const i = F[o][A] || (F[o][A] = k(F, {
     addG: !0,
     addY: a,
     source: n ? `${F.source}|()` : void 0,
     removeY: E === !1,
     isInternalOnly: !0
   }));
-  return C = C || 0, i.lastIndex = C, e = y.exec.call(i, u), n && e && e.pop() === "" && (e = null), F.global && (F.lastIndex = e ? i.lastIndex : 0), e;
+  return C = C || 0, i.lastIndex = C, t = y.exec.call(i, u), n && t && t.pop() === "" && (t = null), F.global && (F.lastIndex = t ? i.lastIndex : 0), t;
 };
 D.forEach = (u, F, C) => {
   let E = 0, A = -1, a;
   for (; a = D.exec(u, F, E); )
     C(a, ++A, u, F), E = a.index + (a[0].length || 1);
 };
-D.globalize = (u) => N(u, { addG: !0 });
+D.globalize = (u) => k(u, { addG: !0 });
 D.install = (u) => {
-  u = iu(u), !k.astral && u.astral && su(!0), !k.namespacing && u.namespacing && lu(!0);
+  u = Au(u), !T.astral && u.astral && Bu(!0), !T.namespacing && u.namespacing && au(!0);
 };
-D.isInstalled = (u) => !!k[u];
-D.isRegExp = (u) => Eu.call(u) === "[object RegExp]";
+D.isInstalled = (u) => !!T[u];
+D.isRegExp = (u) => q.call(u) === "[object RegExp]";
 D.match = (u, F, C) => {
   const E = F.global && C !== "one" || C === "all", A = (E ? "g" : "") + (F.sticky ? "y" : "") || "noGY";
   F[o] = F[o] || {};
-  const a = F[o][A] || (F[o][A] = N(F, {
+  const a = F[o][A] || (F[o][A] = k(F, {
     addG: !!E,
     removeG: C === "one",
     isInternalOnly: !0
-  })), n = c.match.call(K(u), a);
+  })), n = p.match.call(G(u), a);
   return F.global && (F.lastIndex = C === "one" && n ? (
     // Can't use `r2.lastIndex` since `r2` is nonglobal in this case
     n.index + n[0].length
@@ -370,32 +314,32 @@ D.match = (u, F, C) => {
 };
 D.matchChain = (u, F) => function C(E, A) {
   const a = F[A].regex ? F[A] : { regex: F[A] }, n = [];
-  function e(i) {
+  function t(i) {
     if (a.backref) {
-      const t = `Backreference to undefined group: ${a.backref}`, l = isNaN(a.backref);
+      const e = `Backreference to undefined group: ${a.backref}`, l = isNaN(a.backref);
       if (l && D.isInstalled("namespacing")) {
         if (!(a.backref in i.groups))
-          throw new ReferenceError(t);
+          throw new ReferenceError(e);
       } else if (!i.hasOwnProperty(a.backref))
-        throw new ReferenceError(t);
+        throw new ReferenceError(e);
       const B = l && D.isInstalled("namespacing") ? i.groups[a.backref] : i[a.backref];
       n.push(B || "");
     } else
       n.push(i[0]);
   }
   for (const i of E)
-    D.forEach(i, a.regex, e);
+    D.forEach(i, a.regex, t);
   return A === F.length - 1 || !n.length ? n : C(n, A + 1);
 }([u], 0);
 D.replace = (u, F, C, E) => {
   const A = D.isRegExp(F), a = F.global && E !== "one" || E === "all", n = (a ? "g" : "") + (F.sticky ? "y" : "") || "noGY";
-  let e = F;
-  A ? (F[o] = F[o] || {}, e = F[o][n] || (F[o][n] = N(F, {
+  let t = F;
+  A ? (F[o] = F[o] || {}, t = F[o][n] || (F[o][n] = k(F, {
     addG: !!a,
     removeG: E === "one",
     isInternalOnly: !0
-  }))) : a && (e = new RegExp(D.escape(String(F)), "g"));
-  const i = y.replace.call(K(u), e, C);
+  }))) : a && (t = new RegExp(D.escape(String(F)), "g"));
+  const i = y.replace.call(G(u), t, C);
   return A && F.global && (F.lastIndex = 0), i;
 };
 D.replaceEach = (u, F) => {
@@ -403,16 +347,16 @@ D.replaceEach = (u, F) => {
     u = D.replace(u, C[0], C[1], C[2]);
   return u;
 };
-D.split = (u, F, C) => y.split.call(K(u), F, C);
+D.split = (u, F, C) => y.split.call(G(u), F, C);
 D.test = (u, F, C, E) => !!D.exec(u, F, C, E);
 D.uninstall = (u) => {
-  u = iu(u), k.astral && u.astral && su(!1), k.namespacing && u.namespacing && lu(!1);
+  u = Au(u), T.astral && u.astral && Bu(!1), T.namespacing && u.namespacing && au(!1);
 };
 D.union = (u, F, C) => {
   C = C || {};
   const E = C.conjunction || "or";
   let A = 0, a, n;
-  function e(B, r, m) {
+  function t(B, r, m) {
     const s = n[A - a];
     if (r) {
       if (++A, s)
@@ -421,26 +365,26 @@ D.union = (u, F, C) => {
       return `\\${+m + a}`;
     return B;
   }
-  if (!(X(u, "Array") && u.length))
+  if (!(J(u, "Array") && u.length))
     throw new TypeError("Must provide a nonempty array of patterns to merge");
-  const i = /(\()(?!\?)|\\([1-9]\d*)|\\[\s\S]|\[(?:[^\\\]]|\\[\s\S])*\]/g, t = [];
+  const i = /(\()(?!\?)|\\([1-9]\d*)|\\[\s\S]|\[(?:[^\\\]]|\\[\s\S])*\]/g, e = [];
   for (const B of u)
-    D.isRegExp(B) ? (a = A, n = B[o] && B[o].captureNames || [], t.push(c.replace.call(D(B.source).source, i, e))) : t.push(D.escape(B));
+    D.isRegExp(B) ? (a = A, n = B[o] && B[o].captureNames || [], e.push(p.replace.call(D(B.source).source, i, t))) : e.push(D.escape(B));
   const l = E === "none" ? "" : "|";
-  return D(t.join(l), F);
+  return D(e.join(l), F);
 };
 y.exec = function(u) {
-  const F = this.lastIndex, C = c.exec.apply(this, arguments);
+  const F = this.lastIndex, C = p.exec.apply(this, arguments);
   if (C) {
-    if (!$u && C.length > 1 && C.includes("")) {
-      const A = N(this, {
+    if (!_u && C.length > 1 && C.includes("")) {
+      const A = k(this, {
         removeG: !0,
         isInternalOnly: !0
       });
-      c.replace.call(String(u).slice(C.index), A, (...a) => {
+      p.replace.call(String(u).slice(C.index), A, (...a) => {
         const n = a.length;
-        for (let e = 1; e < n - 2; ++e)
-          a[e] === void 0 && (C[e] = void 0);
+        for (let t = 1; t < n - 2; ++t)
+          a[t] === void 0 && (C[t] = void 0);
       });
     }
     let E = C;
@@ -460,30 +404,30 @@ y.match = function(u) {
   if (!D.isRegExp(u))
     u = new RegExp(u);
   else if (u.global) {
-    const F = c.match.apply(this, arguments);
+    const F = p.match.apply(this, arguments);
     return u.lastIndex = 0, F;
   }
-  return y.exec.call(u, K(this));
+  return y.exec.call(u, G(this));
 };
 y.replace = function(u, F) {
   const C = D.isRegExp(u);
   let E, A, a;
-  return C ? (u[o] && ({ captureNames: A } = u[o]), E = u.lastIndex) : u += "", X(F, "Function") ? a = c.replace.call(String(this), u, (...n) => {
+  return C ? (u[o] && ({ captureNames: A } = u[o]), E = u.lastIndex) : u += "", J(F, "Function") ? a = p.replace.call(String(this), u, (...n) => {
     if (A) {
-      let e;
-      D.isInstalled("namespacing") ? (e = /* @__PURE__ */ Object.create(null), n.push(e)) : (n[0] = new String(n[0]), [e] = n);
+      let t;
+      D.isInstalled("namespacing") ? (t = /* @__PURE__ */ Object.create(null), n.push(t)) : (n[0] = new String(n[0]), [t] = n);
       for (let i = 0; i < A.length; ++i)
-        A[i] && (e[A[i]] = n[i + 1]);
+        A[i] && (t[A[i]] = n[i + 1]);
     }
     return F(...n);
-  }) : a = c.replace.call(this == null ? this : String(this), u, (...n) => {
-    return c.replace.call(String(F), vu, e);
-    function e(i, t, l, B) {
-      if (t = t || l, t) {
-        let r = +t;
+  }) : a = p.replace.call(this == null ? this : String(this), u, (...n) => {
+    return p.replace.call(String(F), cu, t);
+    function t(i, e, l, B) {
+      if (e = e || l, e) {
+        let r = +e;
         if (r <= n.length - 3)
           return n[r] || "";
-        if (r = A ? A.indexOf(t) : -1, r < 0)
+        if (r = A ? A.indexOf(e) : -1, r < 0)
           throw new SyntaxError(`Backreference to undefined group ${i}`);
         return n[r + 1] || "";
       }
@@ -506,17 +450,17 @@ y.replace = function(u, F) {
 };
 y.split = function(u, F) {
   if (!D.isRegExp(u))
-    return c.split.apply(this, arguments);
+    return p.split.apply(this, arguments);
   const C = String(this), E = [], A = u.lastIndex;
   let a = 0, n;
-  return F = (F === void 0 ? -1 : F) >>> 0, D.forEach(C, u, (e) => {
-    e.index + e[0].length > a && (E.push(C.slice(a, e.index)), e.length > 1 && e.index < C.length && Array.prototype.push.apply(E, e.slice(1)), n = e[0].length, a = e.index + n);
-  }), a === C.length ? (!c.test.call(u, "") || n) && E.push("") : E.push(C.slice(a)), u.lastIndex = A, E.length > F ? E.slice(0, F) : E;
+  return F = (F === void 0 ? -1 : F) >>> 0, D.forEach(C, u, (t) => {
+    t.index + t[0].length > a && (E.push(C.slice(a, t.index)), t.length > 1 && t.index < C.length && Array.prototype.push.apply(E, t.slice(1)), n = t[0].length, a = t.index + n);
+  }), a === C.length ? (!p.test.call(u, "") || n) && E.push("") : E.push(C.slice(a)), u.lastIndex = A, E.length > F ? E.slice(0, F) : E;
 };
 D.addToken(
   /\\([ABCE-RTUVXYZaeg-mopqyz]|c(?![A-Za-z])|u(?![\dA-Fa-f]{4}|{[\dA-Fa-f]+})|x(?![\dA-Fa-f]{2}))/,
   (u, F) => {
-    if (u[1] === "B" && F === P)
+    if (u[1] === "B" && F === M)
       return u[0];
     throw new SyntaxError(`Invalid escape ${u[0]}`);
   },
@@ -528,12 +472,12 @@ D.addToken(
 D.addToken(
   /\\u{([\dA-Fa-f]+)}/,
   (u, F, C) => {
-    const E = nu(u[1]);
+    const E = Du(u[1]);
     if (E > 1114111)
       throw new SyntaxError(`Invalid Unicode code point ${u[0]}`);
     if (E <= 65535)
-      return `\\u${ru(tu(E))}`;
-    if (Au && C.includes("u"))
+      return `\\u${Eu(Cu(E))}`;
+    if (Q && C.includes("u"))
       return u[0];
     throw new SyntaxError("Cannot use Unicode code point above \\u{FFFF} without flag u");
   },
@@ -553,12 +497,12 @@ D.addToken(
 );
 D.addToken(
   /\(\?#[^)]*\)/,
-  eu,
+  Fu,
   { leadChar: "(" }
 );
 D.addToken(
   /\s+|#[^\n]*\n?/,
-  eu,
+  Fu,
   { flag: "x" }
 );
 D.addToken(
@@ -582,7 +526,7 @@ D.addToken(
 D.addToken(
   /\\(\d+)/,
   function(u, F) {
-    if (!(F === P && /^[1-9]/.test(u[1]) && +u[1] <= this.captureNames.length) && u[1] !== "0")
+    if (!(F === M && /^[1-9]/.test(u[1]) && +u[1] <= this.captureNames.length) && u[1] !== "0")
       throw new SyntaxError(`Cannot use octal escape or backreference to undefined group ${u[0]}`);
     return u[0];
   },
@@ -619,86 +563,86 @@ D.addToken(
  * <xregexp.com>
  * Steven Levithan (c) 2012-present MIT License
  */
-const Ju = (u) => {
+const Su = (u) => {
   const F = "xregexp", C = /(\()(?!\?)|\\([1-9]\d*)|\\[\s\S]|\[(?:[^\\\]]|\\[\s\S])*\]/g, E = u.union([/\({{([\w$]+)}}\)|{{([\w$]+)}}/, C], "g", {
     conjunction: "or"
   });
-  function A(t) {
+  function A(e) {
     const l = /^(?:\(\?:\))*\^/, B = /\$(?:\(\?:\))*$/;
-    return l.test(t) && B.test(t) && // Ensure that the trailing `$` isn't escaped
-    B.test(t.replace(/\\[\s\S]/g, "")) ? t.replace(l, "").replace(B, "") : t;
+    return l.test(e) && B.test(e) && // Ensure that the trailing `$` isn't escaped
+    B.test(e.replace(/\\[\s\S]/g, "")) ? e.replace(l, "").replace(B, "") : e;
   }
-  function a(t, l) {
+  function a(e, l) {
     const B = l ? "x" : "";
-    return u.isRegExp(t) ? t[F] && t[F].captureNames ? (
+    return u.isRegExp(e) ? e[F] && e[F].captureNames ? (
       // Don't recompile, to preserve capture names
-      t
+      e
     ) : (
       // Recompile as XRegExp
-      u(t.source, B)
+      u(e.source, B)
     ) : (
       // Compile string as XRegExp
-      u(t, B)
+      u(e, B)
     );
   }
-  function n(t) {
-    return t instanceof RegExp ? t : u.escape(t);
+  function n(e) {
+    return e instanceof RegExp ? e : u.escape(e);
   }
-  function e(t, l, B) {
-    return t[`subpattern${B}`] = l, t;
+  function t(e, l, B) {
+    return e[`subpattern${B}`] = l, e;
   }
-  function i(t, l, B) {
+  function i(e, l, B) {
     const r = l < B.length - 1;
-    return t + (r ? `{{subpattern${l}}}` : "");
+    return e + (r ? `{{subpattern${l}}}` : "");
   }
-  u.tag = (t) => (l, ...B) => {
-    const r = B.map(n).reduce(e, {}), m = l.raw.map(i).join("");
-    return u.build(m, r, t);
-  }, u.build = (t, l, B) => {
+  u.tag = (e) => (l, ...B) => {
+    const r = B.map(n).reduce(t, {}), m = l.raw.map(i).join("");
+    return u.build(m, r, e);
+  }, u.build = (e, l, B) => {
     B = B || "";
-    const r = B.includes("x"), m = /^\(\?([\w$]+)\)/.exec(t);
+    const r = B.includes("x"), m = /^\(\?([\w$]+)\)/.exec(e);
     m && (B = u._clipDuplicates(B + m[1]));
     const s = {};
     for (const b in l)
       if (l.hasOwnProperty(b)) {
-        const U = a(l[b], r);
+        const O = a(l[b], r);
         s[b] = {
           // Deanchoring allows embedding independently useful anchored regexes. If you
           // really need to keep your anchors, double them (i.e., `^^...$$`).
-          pattern: A(U.source),
-          names: U[F].captureNames || []
+          pattern: A(O.source),
+          names: O[F].captureNames || []
         };
       }
-    const p = a(t, r);
+    const c = a(e, r);
     let I = 0, S, h = 0;
-    const _ = [0], d = p[F].captureNames || [], x = p.source.replace(E, (b, U, ou, cu, V) => {
-      const w = U || ou;
-      let L, j, M;
-      if (w) {
-        if (!s.hasOwnProperty(w))
+    const _ = [0], d = c[F].captureNames || [], x = c.source.replace(E, (b, O, eu, tu, H) => {
+      const R = O || eu;
+      let L, K, w;
+      if (R) {
+        if (!s.hasOwnProperty(R))
           throw new ReferenceError(`Undefined property ${b}`);
-        U ? (L = d[h], _[++h] = ++I, j = `(?<${L || w}>`) : j = "(?:", S = I;
-        const pu = s[w].pattern.replace(C, (_u, Iu, Y) => {
-          if (Iu) {
-            if (L = s[w].names[I - S], ++I, L)
+        O ? (L = d[h], _[++h] = ++I, K = `(?<${L || R}>`) : K = "(?:", S = I;
+        const ru = s[R].pattern.replace(C, (iu, su, v) => {
+          if (su) {
+            if (L = s[R].names[I - S], ++I, L)
               return `(?<${L}>`;
-          } else if (Y)
-            return M = +Y - 1, s[w].names[M] ? (
+          } else if (v)
+            return w = +v - 1, s[R].names[w] ? (
               // Need to preserve the backreference name in case using flag `n`
-              `\\k<${s[w].names[M]}>`
-            ) : `\\${+Y + S}`;
-          return _u;
+              `\\k<${s[R].names[w]}>`
+            ) : `\\${+v + S}`;
+          return iu;
         });
-        return `${j}${pu})`;
+        return `${K}${ru})`;
       }
-      if (cu) {
+      if (tu) {
         if (L = d[h], _[++h] = ++I, L)
           return `(?<${L}>`;
-      } else if (V)
-        return M = +V - 1, d[M] ? (
+      } else if (H)
+        return w = +H - 1, d[w] ? (
           // Need to preserve the backreference name in case using flag `n`
-          `\\k<${d[M]}>`
-        ) : `\\${_[+V]}`;
+          `\\k<${d[w]}>`
+        ) : `\\${_[+H]}`;
       return b;
     });
     return u(x, B);
@@ -709,7 +653,7 @@ const Ju = (u) => {
  * <xregexp.com>
  * Steven Levithan (c) 2009-present MIT License
  */
-const zu = (u) => {
+const xu = (u) => {
   function F(C, E, A, a) {
     return {
       name: C,
@@ -720,11 +664,11 @@ const zu = (u) => {
   }
   u.matchRecursive = (C, E, A, a, n) => {
     a = a || "", n = n || {};
-    const e = a.includes("g"), i = a.includes("y"), t = a.replace(/y/g, "");
+    const t = a.includes("g"), i = a.includes("y"), e = a.replace(/y/g, "");
     let { escapeChar: l } = n;
     const B = n.valueNames, r = [];
-    let m = 0, s = 0, p = 0, I = 0, S, h, _, d, x;
-    if (E = u(E, t), A = u(A, t), l) {
+    let m = 0, s = 0, c = 0, I = 0, S, h, _, d, x;
+    if (E = u(E, e), A = u(A, e), l) {
       if (l.length > 1)
         throw new Error("Cannot use more than one escape character");
       l = u.escape(l), x = new RegExp(
@@ -738,22 +682,22 @@ const zu = (u) => {
       );
     }
     for (; ; ) {
-      if (l && (p += (u.exec(C, x, p, "sticky") || [""])[0].length), _ = u.exec(C, E, p), d = u.exec(C, A, p), _ && d && (_.index <= d.index ? d = null : _ = null), _ || d)
-        s = (_ || d).index, p = s + (_ || d)[0].length;
+      if (l && (c += (u.exec(C, x, c, "sticky") || [""])[0].length), _ = u.exec(C, E, c), d = u.exec(C, A, c), _ && d && (_.index <= d.index ? d = null : _ = null), _ || d)
+        s = (_ || d).index, c = s + (_ || d)[0].length;
       else if (!m)
         break;
       if (i && !m && s > I)
         break;
       if (_)
-        m || (S = s, h = p), ++m;
+        m || (S = s, h = c), ++m;
       else if (d && m) {
-        if (!--m && (B ? (B[0] && S > I && r.push(F(B[0], C.slice(I, S), I, S)), B[1] && r.push(F(B[1], C.slice(S, h), S, h)), B[2] && r.push(F(B[2], C.slice(h, s), h, s)), B[3] && r.push(F(B[3], C.slice(s, p), s, p))) : r.push(C.slice(h, s)), I = p, !e))
+        if (!--m && (B ? (B[0] && S > I && r.push(F(B[0], C.slice(I, S), I, S)), B[1] && r.push(F(B[1], C.slice(S, h), S, h)), B[2] && r.push(F(B[2], C.slice(h, s), h, s)), B[3] && r.push(F(B[3], C.slice(s, c), s, c))) : r.push(C.slice(h, s)), I = c, !t))
           break;
       } else
         throw new Error("Unbalanced delimiter found in string");
-      s === p && ++p;
+      s === c && ++c;
     }
-    return e && !i && B && B[0] && C.length > I && r.push(F(B[0], C.slice(I), I, C.length)), r;
+    return t && !i && B && B[0] && C.length > I && r.push(F(B[0], C.slice(I), I, C.length)), r;
   };
 };
 /*!
@@ -761,7 +705,7 @@ const zu = (u) => {
  * <xregexp.com>
  * Steven Levithan (c) 2008-present MIT License
  */
-const Zu = (u) => {
+const yu = (u) => {
   const F = {}, C = u._dec, E = u._hex, A = u._pad4;
   function a(B) {
     return B.replace(/[- _]+/g, "").toLowerCase();
@@ -770,42 +714,42 @@ const Zu = (u) => {
     const r = /^\\[xu](.+)/.exec(B);
     return r ? C(r[1]) : B.charCodeAt(B[0] === "\\" ? 1 : 0);
   }
-  function e(B) {
+  function t(B) {
     let r = "", m = -1;
     return u.forEach(
       B,
       /(\\x..|\\u....|\\?[\s\S])(?:-(\\x..|\\u....|\\?[\s\S]))?/,
       (s) => {
-        const p = n(s[1]);
-        p > m + 1 && (r += `\\u${A(E(m + 1))}`, p > m + 2 && (r += `-\\u${A(E(p - 1))}`)), m = n(s[2] || s[1]);
+        const c = n(s[1]);
+        c > m + 1 && (r += `\\u${A(E(m + 1))}`, c > m + 2 && (r += `-\\u${A(E(c - 1))}`)), m = n(s[2] || s[1]);
       }
     ), m < 65535 && (r += `\\u${A(E(m + 1))}`, m < 65534 && (r += "-\\uFFFF")), r;
   }
   function i(B) {
     const r = "b!";
-    return F[B][r] || (F[B][r] = e(F[B].bmp));
+    return F[B][r] || (F[B][r] = t(F[B].bmp));
   }
-  function t(B, r) {
+  function e(B, r) {
     const m = F[B];
     let s = "";
     return m.bmp && !m.isBmpLast && (s = `[${m.bmp}]${m.astral ? "|" : ""}`), m.astral && (s += m.astral), m.isBmpLast && m.bmp && (s += `${m.astral ? "|" : ""}[${m.bmp}]`), r ? `(?:(?!${s})(?:[\uD800-\uDBFF][\uDC00-\uDFFF]|[\0-￿]))` : `(?:${s})`;
   }
   function l(B, r) {
     const m = r ? "a!" : "a=";
-    return F[B][m] || (F[B][m] = t(B, r));
+    return F[B][m] || (F[B][m] = e(B, r));
   }
   u.addToken(
     // Use `*` instead of `+` to avoid capturing `^` as the token name in `\p{^}`
     /\\([pP])(?:{(\^?)([^}]*)}|([A-Za-z]))/,
     (B, r, m) => {
-      const s = "Invalid double negation ", p = "Unknown Unicode token ", I = "Unicode token missing data ", S = "Astral mode required for Unicode token ", h = "Astral mode does not support Unicode tokens within character classes";
+      const s = "Invalid double negation ", c = "Unknown Unicode token ", I = "Unicode token missing data ", S = "Astral mode required for Unicode token ", h = "Astral mode does not support Unicode tokens within character classes";
       let _ = B[1] === "P" || !!B[2];
       const d = m.includes("A");
       let x = a(B[4] || B[3]), b = F[x];
       if (B[1] === "P" && B[2])
         throw new SyntaxError(s + B[0]);
       if (!F.hasOwnProperty(x))
-        throw new SyntaxError(p + B[0]);
+        throw new SyntaxError(c + B[0]);
       if (b.inverseOf) {
         if (x = a(b.inverseOf), !F.hasOwnProperty(x))
           throw new ReferenceError(`${I + B[0]} -> ${b.inverseOf}`);
@@ -840,7 +784,7 @@ const Zu = (u) => {
     return F[r];
   };
 };
-var Wu = [
+var Lu = [
   {
     name: "InAdlam",
     astral: "\uD83A[\uDD00-\uDD5F]"
@@ -2016,12 +1960,12 @@ var Wu = [
  * Steven Levithan (c) 2010-present MIT License
  * Unicode data by Mathias Bynens <mathiasbynens.be>
  */
-const qu = (u) => {
+const Ru = (u) => {
   if (!u.addUnicodeData)
     throw new ReferenceError("Unicode Base must be loaded before Unicode Blocks");
-  u.addUnicodeData(Wu);
+  u.addUnicodeData(Lu);
 };
-var Qu = [
+var Tu = [
   {
     name: "C",
     alias: "Other",
@@ -2245,12 +2189,12 @@ var Qu = [
  * Steven Levithan (c) 2010-present MIT License
  * Unicode data by Mathias Bynens <mathiasbynens.be>
  */
-const Xu = (u) => {
+const ku = (u) => {
   if (!u.addUnicodeData)
     throw new ReferenceError("Unicode Base must be loaded before Unicode Categories");
-  u.addUnicodeData(Qu);
+  u.addUnicodeData(Tu);
 };
-var uD = [
+var wu = [
   {
     name: "ASCII",
     bmp: "\0-"
@@ -2297,10 +2241,10 @@ var uD = [
  * Steven Levithan (c) 2012-present MIT License
  * Unicode data by Mathias Bynens <mathiasbynens.be>
  */
-const DD = (u) => {
+const Nu = (u) => {
   if (!u.addUnicodeData)
     throw new ReferenceError("Unicode Base must be loaded before Unicode Properties");
-  const F = uD;
+  const F = wu;
   F.push({
     name: "Assigned",
     // Since this is defined as the inverse of Unicode category Cn (Unassigned), the Unicode
@@ -2308,7 +2252,7 @@ const DD = (u) => {
     inverseOf: "Cn"
   }), u.addUnicodeData(F);
 };
-var FD = [
+var Mu = [
   {
     name: "Adlam",
     astral: "\uD83A[\uDD00-\uDD4B\uDD50-\uDD59\uDD5E\uDD5F]"
@@ -2953,19 +2897,19 @@ var FD = [
  * Steven Levithan (c) 2010-present MIT License
  * Unicode data by Mathias Bynens <mathiasbynens.be>
  */
-const CD = (u) => {
+const Ou = (u) => {
   if (!u.addUnicodeData)
     throw new ReferenceError("Unicode Base must be loaded before Unicode Scripts");
-  u.addUnicodeData(FD);
+  u.addUnicodeData(Mu);
 };
-Ju(D);
-zu(D);
-Zu(D);
-qu(D);
-Xu(D);
-DD(D);
-CD(D);
-const ED = [
+Su(D);
+xu(D);
+yu(D);
+Ru(D);
+ku(D);
+Nu(D);
+Ou(D);
+const Pu = [
   /([^\\p{scx=kana}\\p{scx=hira}\\p{scx=hani}])/,
   /([\u30ce\u30f3\u30bd\u30be])/,
   /([^\\p{scx=kana}\\p{scx=hira}\\p{scx=hani}]|)/,
@@ -2977,7 +2921,7 @@ const ED = [
   /([^\\p{scx=latn}\\p{scx=grek}\\p{scx=cyrl}][\u0300-\u0339]|)/,
   /(\u0131[\u0300-\u0339]|)/,
   /([ijl]\u0307)/
-], AD = /[\u00df\u03c2\u200c\u200d]/, BD = /[\u0080–\u024f]/, aD = /[\u3078-\u307a\u30d8-\u30da\u30fb-\u30fe]/, nD = /[\u0300-\u0339]/, eD = /[асԁеһіјӏорԛѕԝхуъЬҽпгѵѡ]/, tD = "[̀-̹]", rD = D(`([\\p{Latin}][\\p{Greek}][\\p{Cyrillic}][0-9._-]${tD})`), iD = D("[0-9A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u0131\\u0134-\\u013E\\u0141-\\u0148\\u014A-\\u017E\\u018F\\u01A0\\u01A1\\u01AF\\u01B0\\u01CD-\\u01DC\\u01DE-\\u01E3\\u01E6-\\u01F0\\u01F4\\u01F5\\u01F8-\\u021B\\u021E\\u021F\\u0226-\\u0233\\u0259\\u02BB\\u02BC\\u02EC\\u0300-\\u0304\\u0306-\\u030C\\u030F-\\u0311\\u0313\\u0314\\u031B\\u0323-\\u0328\\u032D\\u032E\\u0330\\u0331\\u0335\\u0338\\u0339\\u0342\\u0345\\u037B-\\u037D\\u0386\\u0388-\\u038A\\u038C\\u038E-\\u03A1\\u03A3-\\u03CE\\u03FC-\\u045F\\u048A-\\u0529\\u052E\\u052F\\u0531-\\u0556\\u0559\\u0561-\\u0586\\u05B4\\u05D0-\\u05EA\\u05F0-\\u05F2\\u0620-\\u063F\\u0641-\\u0655\\u0660-\\u0669\\u0670-\\u0672\\u0674\\u0679-\\u068D\\u068F-\\u06D3\\u06D5\\u06E5\\u06E6\\u06EE-\\u06FC\\u06FF\\u0750-\\u07B1\\u08A0-\\u08AC\\u08B2\\u08B6-\\u08BD\\u0901-\\u094D\\u094F\\u0950\\u0956\\u0957\\u0960-\\u0963\\u0966-\\u096F\\u0971-\\u0977\\u0979-\\u097F\\u0981-\\u0983\\u0985-\\u098C\\u098F\\u0990\\u0993-\\u09A8\\u09AA-\\u09B0\\u09B2\\u09B6-\\u09B9\\u09BC-\\u09C4\\u09C7\\u09C8\\u09CB-\\u09CE\\u09D7\\u09E0-\\u09E3\\u09E6-\\u09F1\\u0A01-\\u0A03\\u0A05-\\u0A0A\\u0A0F\\u0A10\\u0A13-\\u0A28\\u0A2A-\\u0A30\\u0A32\\u0A35\\u0A38\\u0A39\\u0A3C\\u0A3E-\\u0A42\\u0A47\\u0A48\\u0A4B-\\u0A4D\\u0A5C\\u0A66-\\u0A74\\u0A81-\\u0A83\\u0A85-\\u0A8D\\u0A8F-\\u0A91\\u0A93-\\u0AA8\\u0AAA-\\u0AB0\\u0AB2\\u0AB3\\u0AB5-\\u0AB9\\u0ABC-\\u0AC5\\u0AC7-\\u0AC9\\u0ACB-\\u0ACD\\u0AD0\\u0AE0-\\u0AE3\\u0AE6-\\u0AEF\\u0B01-\\u0B03\\u0B05-\\u0B0C\\u0B0F\\u0B10\\u0B13-\\u0B28\\u0B2A-\\u0B30\\u0B32\\u0B33\\u0B35-\\u0B39\\u0B3C-\\u0B43\\u0B47\\u0B48\\u0B4B-\\u0B4D\\u0B56\\u0B57\\u0B5F-\\u0B61\\u0B66-\\u0B6F\\u0B71\\u0B82\\u0B83\\u0B85-\\u0B8A\\u0B8E-\\u0B90\\u0B92-\\u0B95\\u0B99\\u0B9A\\u0B9C\\u0B9E\\u0B9F\\u0BA3\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0BBE-\\u0BC2\\u0BC6-\\u0BC8\\u0BCA-\\u0BCD\\u0BD0\\u0BD7\\u0BE6-\\u0BEF\\u0C01-\\u0C03\\u0C05-\\u0C0C\\u0C0E-\\u0C10\\u0C12-\\u0C28\\u0C2A-\\u0C33\\u0C35-\\u0C39\\u0C3D-\\u0C44\\u0C46-\\u0C48\\u0C4A-\\u0C4D\\u0C55\\u0C56\\u0C60\\u0C61\\u0C66-\\u0C6F\\u0C80\\u0C82\\u0C83\\u0C85-\\u0C8C\\u0C8E-\\u0C90\\u0C92-\\u0CA8\\u0CAA-\\u0CB3\\u0CB5-\\u0CB9\\u0CBC-\\u0CC4\\u0CC6-\\u0CC8\\u0CCA-\\u0CCD\\u0CD5\\u0CD6\\u0CE0-\\u0CE3\\u0CE6-\\u0CEF\\u0CF1\\u0CF2\\u0D02\\u0D03\\u0D05-\\u0D0C\\u0D0E-\\u0D10\\u0D12-\\u0D3A\\u0D3D-\\u0D43\\u0D46-\\u0D48\\u0D4A-\\u0D4E\\u0D54-\\u0D57\\u0D60\\u0D61\\u0D66-\\u0D6F\\u0D7A-\\u0D7F\\u0D82\\u0D83\\u0D85-\\u0D8E\\u0D91-\\u0D96\\u0D9A-\\u0DA5\\u0DA7-\\u0DB1\\u0DB3-\\u0DBB\\u0DBD\\u0DC0-\\u0DC6\\u0DCA\\u0DCF-\\u0DD4\\u0DD6\\u0DD8-\\u0DDE\\u0DF2\\u0E01-\\u0E32\\u0E34-\\u0E3A\\u0E40-\\u0E4E\\u0E50-\\u0E59\\u0E81\\u0E82\\u0E84\\u0E87\\u0E88\\u0E8A\\u0E8D\\u0E94-\\u0E97\\u0E99-\\u0E9F\\u0EA1-\\u0EA3\\u0EA5\\u0EA7\\u0EAA\\u0EAB\\u0EAD-\\u0EB2\\u0EB4-\\u0EB9\\u0EBB-\\u0EBD\\u0EC0-\\u0EC4\\u0EC6\\u0EC8-\\u0ECD\\u0ED0-\\u0ED9\\u0EDE\\u0EDF\\u0F00\\u0F20-\\u0F29\\u0F35\\u0F37\\u0F3E-\\u0F42\\u0F44-\\u0F47\\u0F49-\\u0F4C\\u0F4E-\\u0F51\\u0F53-\\u0F56\\u0F58-\\u0F5B\\u0F5D-\\u0F68\\u0F6A-\\u0F6C\\u0F71\\u0F72\\u0F74\\u0F7A-\\u0F80\\u0F82-\\u0F84\\u0F86-\\u0F92\\u0F94-\\u0F97\\u0F99-\\u0F9C\\u0F9E-\\u0FA1\\u0FA3-\\u0FA6\\u0FA8-\\u0FAB\\u0FAD-\\u0FB8\\u0FBA-\\u0FBC\\u0FC6\\u1000-\\u1049\\u1050-\\u109D\\u10C7\\u10CD\\u10D0-\\u10F0\\u10F7-\\u10FA\\u10FD-\\u10FF\\u1200-\\u1248\\u124A-\\u124D\\u1250-\\u1256\\u1258\\u125A-\\u125D\\u1260-\\u1288\\u128A-\\u128D\\u1290-\\u12B0\\u12B2-\\u12B5\\u12B8-\\u12BE\\u12C0\\u12C2-\\u12C5\\u12C8-\\u12D6\\u12D8-\\u1310\\u1312-\\u1315\\u1318-\\u135A\\u135D-\\u135F\\u1380-\\u138F\\u1780-\\u17A2\\u17A5-\\u17A7\\u17A9-\\u17B3\\u17B6-\\u17CA\\u17D2\\u17D7\\u17DC\\u17E0-\\u17E9\\u1C80-\\u1C88\\u1E00-\\u1E99\\u1E9E\\u1EA0-\\u1EF9\\u1F00-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F57\\u1F59\\u1F5B\\u1F5D\\u1F5F-\\u1F70\\u1F72\\u1F74\\u1F76\\u1F78\\u1F7A\\u1F7C\\u1F80-\\u1FB4\\u1FB6-\\u1FBA\\u1FBC\\u1FC2-\\u1FC4\\u1FC6-\\u1FC8\\u1FCA\\u1FCC\\u1FD0-\\u1FD2\\u1FD6-\\u1FDA\\u1FE0-\\u1FE2\\u1FE4-\\u1FEA\\u1FEC\\u1FF2-\\u1FF4\\u1FF6-\\u1FF8\\u1FFA\\u1FFC\\u2D27\\u2D2D\\u2D80-\\u2D96\\u2DA0-\\u2DA6\\u2DA8-\\u2DAE\\u2DB0-\\u2DB6\\u2DB8-\\u2DBE\\u2DC0-\\u2DC6\\u2DC8-\\u2DCE\\u2DD0-\\u2DD6\\u2DD8-\\u2DDE\\u3005-\\u3007\\u3041-\\u3096\\u3099\\u309A\\u309D\\u309E\\u30A1-\\u30FA\\u30FC-\\u30FE\\u3105-\\u312D\\u31A0-\\u31BA\\u3400-\\u4DB5\\u4E00-\\u9FD5\\uA660\\uA661\\uA674-\\uA67B\\uA67F\\uA69F\\uA717-\\uA71F\\uA788\\uA78D\\uA78E\\uA790-\\uA793\\uA7A0-\\uA7AA\\uA7AE\\uA7FA\\uA9E7-\\uA9FE\\uAA60-\\uAA76\\uAA7A-\\uAA7F\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB26\\uAB28-\\uAB2E\\uAC00-\\uD7A3\\uFA0E\\uFA0F\\uFA11\\uFA13\\uFA14\\uFA1F\\uFA21\\uFA23\\uFA24\\uFA27-\\uFA29\\u20000-\\u2A6D6\\u2A700-\\u2B734\\u2B740-\\u2B81D\\u2B820-\\u2CEA1]"), sD = D("['\\-.\\:\\u00B7\\u0375\\u058A\\u05F3\\u05F4\\u06FD\\u06FE\\u0F0B\\u200C\\u200D\\u2010\\u2019\\u2027\\u30A0\\u30FB]"), Fu = D.union([sD, iD], "i"), lD = D("[\\u0338\\u058a\\u2010\\u2019\\u2027\\u30a0\\u02bb\\u02bc\\u0620\\u0F8C\\u0F8D\\u0F8E\\u0F8F\\u01CD-\\u01DC\\u1C80-\\u1C8F\\u1E00-\\u1E9B\\u1F00-\\u1FFF\\uA640-\\uA69F\\uA720-\\uA7FF]");
+], Uu = /[\u00df\u03c2\u200c\u200d]/, $u = /[\u0080–\u024f]/, Gu = /[\u3078-\u307a\u30d8-\u30da\u30fb-\u30fe]/, Hu = /[\u0300-\u0339]/, Ku = /[асԁеһіјӏорԛѕԝхуъЬҽпгѵѡ]/, vu = "[̀-̹]", Vu = D(`([\\p{Latin}][\\p{Greek}][\\p{Cyrillic}][0-9._-]${vu})`), ju = D("[0-9A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u0131\\u0134-\\u013E\\u0141-\\u0148\\u014A-\\u017E\\u018F\\u01A0\\u01A1\\u01AF\\u01B0\\u01CD-\\u01DC\\u01DE-\\u01E3\\u01E6-\\u01F0\\u01F4\\u01F5\\u01F8-\\u021B\\u021E\\u021F\\u0226-\\u0233\\u0259\\u02BB\\u02BC\\u02EC\\u0300-\\u0304\\u0306-\\u030C\\u030F-\\u0311\\u0313\\u0314\\u031B\\u0323-\\u0328\\u032D\\u032E\\u0330\\u0331\\u0335\\u0338\\u0339\\u0342\\u0345\\u037B-\\u037D\\u0386\\u0388-\\u038A\\u038C\\u038E-\\u03A1\\u03A3-\\u03CE\\u03FC-\\u045F\\u048A-\\u0529\\u052E\\u052F\\u0531-\\u0556\\u0559\\u0561-\\u0586\\u05B4\\u05D0-\\u05EA\\u05F0-\\u05F2\\u0620-\\u063F\\u0641-\\u0655\\u0660-\\u0669\\u0670-\\u0672\\u0674\\u0679-\\u068D\\u068F-\\u06D3\\u06D5\\u06E5\\u06E6\\u06EE-\\u06FC\\u06FF\\u0750-\\u07B1\\u08A0-\\u08AC\\u08B2\\u08B6-\\u08BD\\u0901-\\u094D\\u094F\\u0950\\u0956\\u0957\\u0960-\\u0963\\u0966-\\u096F\\u0971-\\u0977\\u0979-\\u097F\\u0981-\\u0983\\u0985-\\u098C\\u098F\\u0990\\u0993-\\u09A8\\u09AA-\\u09B0\\u09B2\\u09B6-\\u09B9\\u09BC-\\u09C4\\u09C7\\u09C8\\u09CB-\\u09CE\\u09D7\\u09E0-\\u09E3\\u09E6-\\u09F1\\u0A01-\\u0A03\\u0A05-\\u0A0A\\u0A0F\\u0A10\\u0A13-\\u0A28\\u0A2A-\\u0A30\\u0A32\\u0A35\\u0A38\\u0A39\\u0A3C\\u0A3E-\\u0A42\\u0A47\\u0A48\\u0A4B-\\u0A4D\\u0A5C\\u0A66-\\u0A74\\u0A81-\\u0A83\\u0A85-\\u0A8D\\u0A8F-\\u0A91\\u0A93-\\u0AA8\\u0AAA-\\u0AB0\\u0AB2\\u0AB3\\u0AB5-\\u0AB9\\u0ABC-\\u0AC5\\u0AC7-\\u0AC9\\u0ACB-\\u0ACD\\u0AD0\\u0AE0-\\u0AE3\\u0AE6-\\u0AEF\\u0B01-\\u0B03\\u0B05-\\u0B0C\\u0B0F\\u0B10\\u0B13-\\u0B28\\u0B2A-\\u0B30\\u0B32\\u0B33\\u0B35-\\u0B39\\u0B3C-\\u0B43\\u0B47\\u0B48\\u0B4B-\\u0B4D\\u0B56\\u0B57\\u0B5F-\\u0B61\\u0B66-\\u0B6F\\u0B71\\u0B82\\u0B83\\u0B85-\\u0B8A\\u0B8E-\\u0B90\\u0B92-\\u0B95\\u0B99\\u0B9A\\u0B9C\\u0B9E\\u0B9F\\u0BA3\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0BBE-\\u0BC2\\u0BC6-\\u0BC8\\u0BCA-\\u0BCD\\u0BD0\\u0BD7\\u0BE6-\\u0BEF\\u0C01-\\u0C03\\u0C05-\\u0C0C\\u0C0E-\\u0C10\\u0C12-\\u0C28\\u0C2A-\\u0C33\\u0C35-\\u0C39\\u0C3D-\\u0C44\\u0C46-\\u0C48\\u0C4A-\\u0C4D\\u0C55\\u0C56\\u0C60\\u0C61\\u0C66-\\u0C6F\\u0C80\\u0C82\\u0C83\\u0C85-\\u0C8C\\u0C8E-\\u0C90\\u0C92-\\u0CA8\\u0CAA-\\u0CB3\\u0CB5-\\u0CB9\\u0CBC-\\u0CC4\\u0CC6-\\u0CC8\\u0CCA-\\u0CCD\\u0CD5\\u0CD6\\u0CE0-\\u0CE3\\u0CE6-\\u0CEF\\u0CF1\\u0CF2\\u0D02\\u0D03\\u0D05-\\u0D0C\\u0D0E-\\u0D10\\u0D12-\\u0D3A\\u0D3D-\\u0D43\\u0D46-\\u0D48\\u0D4A-\\u0D4E\\u0D54-\\u0D57\\u0D60\\u0D61\\u0D66-\\u0D6F\\u0D7A-\\u0D7F\\u0D82\\u0D83\\u0D85-\\u0D8E\\u0D91-\\u0D96\\u0D9A-\\u0DA5\\u0DA7-\\u0DB1\\u0DB3-\\u0DBB\\u0DBD\\u0DC0-\\u0DC6\\u0DCA\\u0DCF-\\u0DD4\\u0DD6\\u0DD8-\\u0DDE\\u0DF2\\u0E01-\\u0E32\\u0E34-\\u0E3A\\u0E40-\\u0E4E\\u0E50-\\u0E59\\u0E81\\u0E82\\u0E84\\u0E87\\u0E88\\u0E8A\\u0E8D\\u0E94-\\u0E97\\u0E99-\\u0E9F\\u0EA1-\\u0EA3\\u0EA5\\u0EA7\\u0EAA\\u0EAB\\u0EAD-\\u0EB2\\u0EB4-\\u0EB9\\u0EBB-\\u0EBD\\u0EC0-\\u0EC4\\u0EC6\\u0EC8-\\u0ECD\\u0ED0-\\u0ED9\\u0EDE\\u0EDF\\u0F00\\u0F20-\\u0F29\\u0F35\\u0F37\\u0F3E-\\u0F42\\u0F44-\\u0F47\\u0F49-\\u0F4C\\u0F4E-\\u0F51\\u0F53-\\u0F56\\u0F58-\\u0F5B\\u0F5D-\\u0F68\\u0F6A-\\u0F6C\\u0F71\\u0F72\\u0F74\\u0F7A-\\u0F80\\u0F82-\\u0F84\\u0F86-\\u0F92\\u0F94-\\u0F97\\u0F99-\\u0F9C\\u0F9E-\\u0FA1\\u0FA3-\\u0FA6\\u0FA8-\\u0FAB\\u0FAD-\\u0FB8\\u0FBA-\\u0FBC\\u0FC6\\u1000-\\u1049\\u1050-\\u109D\\u10C7\\u10CD\\u10D0-\\u10F0\\u10F7-\\u10FA\\u10FD-\\u10FF\\u1200-\\u1248\\u124A-\\u124D\\u1250-\\u1256\\u1258\\u125A-\\u125D\\u1260-\\u1288\\u128A-\\u128D\\u1290-\\u12B0\\u12B2-\\u12B5\\u12B8-\\u12BE\\u12C0\\u12C2-\\u12C5\\u12C8-\\u12D6\\u12D8-\\u1310\\u1312-\\u1315\\u1318-\\u135A\\u135D-\\u135F\\u1380-\\u138F\\u1780-\\u17A2\\u17A5-\\u17A7\\u17A9-\\u17B3\\u17B6-\\u17CA\\u17D2\\u17D7\\u17DC\\u17E0-\\u17E9\\u1C80-\\u1C88\\u1E00-\\u1E99\\u1E9E\\u1EA0-\\u1EF9\\u1F00-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F57\\u1F59\\u1F5B\\u1F5D\\u1F5F-\\u1F70\\u1F72\\u1F74\\u1F76\\u1F78\\u1F7A\\u1F7C\\u1F80-\\u1FB4\\u1FB6-\\u1FBA\\u1FBC\\u1FC2-\\u1FC4\\u1FC6-\\u1FC8\\u1FCA\\u1FCC\\u1FD0-\\u1FD2\\u1FD6-\\u1FDA\\u1FE0-\\u1FE2\\u1FE4-\\u1FEA\\u1FEC\\u1FF2-\\u1FF4\\u1FF6-\\u1FF8\\u1FFA\\u1FFC\\u2D27\\u2D2D\\u2D80-\\u2D96\\u2DA0-\\u2DA6\\u2DA8-\\u2DAE\\u2DB0-\\u2DB6\\u2DB8-\\u2DBE\\u2DC0-\\u2DC6\\u2DC8-\\u2DCE\\u2DD0-\\u2DD6\\u2DD8-\\u2DDE\\u3005-\\u3007\\u3041-\\u3096\\u3099\\u309A\\u309D\\u309E\\u30A1-\\u30FA\\u30FC-\\u30FE\\u3105-\\u312D\\u31A0-\\u31BA\\u3400-\\u4DB5\\u4E00-\\u9FD5\\uA660\\uA661\\uA674-\\uA67B\\uA67F\\uA69F\\uA717-\\uA71F\\uA788\\uA78D\\uA78E\\uA790-\\uA793\\uA7A0-\\uA7AA\\uA7AE\\uA7FA\\uA9E7-\\uA9FE\\uAA60-\\uAA76\\uAA7A-\\uAA7F\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB26\\uAB28-\\uAB2E\\uAC00-\\uD7A3\\uFA0E\\uFA0F\\uFA11\\uFA13\\uFA14\\uFA1F\\uFA21\\uFA23\\uFA24\\uFA27-\\uFA29\\u20000-\\u2A6D6\\u2A700-\\u2B734\\u2B740-\\u2B81D\\u2B820-\\u2CEA1]"), Yu = D("['\\-.\\:\\u00B7\\u0375\\u058A\\u05F3\\u05F4\\u06FD\\u06FE\\u0F0B\\u200C\\u200D\\u2010\\u2019\\u2027\\u30A0\\u30FB]"), W = D.union([Yu, ju], "i"), Ju = D("[\\u0338\\u058a\\u2010\\u2019\\u2027\\u30a0\\u02bb\\u02bc\\u0620\\u0F8C\\u0F8D\\u0F8E\\u0F8F\\u01CD-\\u01DC\\u1C80-\\u1C8F\\u1E00-\\u1E9B\\u1F00-\\u1FFF\\uA640-\\uA69F\\uA720-\\uA7FF]");
 D("\\p{InBasic_Latin}");
 D("\\p{InLatin-1_Supplement}");
 D("\\p{InLatin_Extended-A}");
@@ -3082,7 +3026,7 @@ D("\\p{InSmall_Form_Variants}");
 D("\\p{InArabic_Presentation_Forms-B}");
 D("\\p{InHalfwidth_and_Fullwidth_Forms}");
 D("\\p{InSpecials}");
-const mD = () => /[#*0-9]\uFE0F?\u20E3|[\xA9\xAE\u203C\u2049\u2122\u2139\u2194-\u2199\u21A9\u21AA\u231A\u231B\u2328\u23CF\u23ED-\u23EF\u23F1\u23F2\u23F8-\u23FA\u24C2\u25AA\u25AB\u25B6\u25C0\u25FB\u25FC\u25FE\u2600-\u2604\u260E\u2611\u2614\u2615\u2618\u2620\u2622\u2623\u2626\u262A\u262E\u262F\u2638-\u263A\u2640\u2642\u2648-\u2653\u265F\u2660\u2663\u2665\u2666\u2668\u267B\u267E\u267F\u2692\u2694-\u2697\u2699\u269B\u269C\u26A0\u26A7\u26AA\u26B0\u26B1\u26BD\u26BE\u26C4\u26C8\u26CF\u26D1\u26D3\u26E9\u26F0-\u26F5\u26F7\u26F8\u26FA\u2702\u2708\u2709\u270F\u2712\u2714\u2716\u271D\u2721\u2733\u2734\u2744\u2747\u2757\u2763\u27A1\u2934\u2935\u2B05-\u2B07\u2B1B\u2B1C\u2B55\u3030\u303D\u3297\u3299]\uFE0F?|[\u261D\u270C\u270D](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?|[\u270A\u270B](?:\uD83C[\uDFFB-\uDFFF])?|[\u23E9-\u23EC\u23F0\u23F3\u25FD\u2693\u26A1\u26AB\u26C5\u26CE\u26D4\u26EA\u26FD\u2705\u2728\u274C\u274E\u2753-\u2755\u2795-\u2797\u27B0\u27BF\u2B50]|\u26F9(?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|\u2764\uFE0F?(?:\u200D(?:\uD83D\uDD25|\uD83E\uDE79))?|\uD83C(?:[\uDC04\uDD70\uDD71\uDD7E\uDD7F\uDE02\uDE37\uDF21\uDF24-\uDF2C\uDF36\uDF7D\uDF96\uDF97\uDF99-\uDF9B\uDF9E\uDF9F\uDFCD\uDFCE\uDFD4-\uDFDF\uDFF5\uDFF7]\uFE0F?|[\uDF85\uDFC2\uDFC7](?:\uD83C[\uDFFB-\uDFFF])?|[\uDFC3\uDFC4\uDFCA](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDFCB\uDFCC](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDCCF\uDD8E\uDD91-\uDD9A\uDE01\uDE1A\uDE2F\uDE32-\uDE36\uDE38-\uDE3A\uDE50\uDE51\uDF00-\uDF20\uDF2D-\uDF35\uDF37-\uDF7C\uDF7E-\uDF84\uDF86-\uDF93\uDFA0-\uDFC1\uDFC5\uDFC6\uDFC8\uDFC9\uDFCF-\uDFD3\uDFE0-\uDFF0\uDFF8-\uDFFF]|\uDDE6\uD83C[\uDDE8-\uDDEC\uDDEE\uDDF1\uDDF2\uDDF4\uDDF6-\uDDFA\uDDFC\uDDFD\uDDFF]|\uDDE7\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEF\uDDF1-\uDDF4\uDDF6-\uDDF9\uDDFB\uDDFC\uDDFE\uDDFF]|\uDDE8\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDEE\uDDF0-\uDDF5\uDDF7\uDDFA-\uDDFF]|\uDDE9\uD83C[\uDDEA\uDDEC\uDDEF\uDDF0\uDDF2\uDDF4\uDDFF]|\uDDEA\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDED\uDDF7-\uDDFA]|\uDDEB\uD83C[\uDDEE-\uDDF0\uDDF2\uDDF4\uDDF7]|\uDDEC\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEE\uDDF1-\uDDF3\uDDF5-\uDDFA\uDDFC\uDDFE]|\uDDED\uD83C[\uDDF0\uDDF2\uDDF3\uDDF7\uDDF9\uDDFA]|\uDDEE\uD83C[\uDDE8-\uDDEA\uDDF1-\uDDF4\uDDF6-\uDDF9]|\uDDEF\uD83C[\uDDEA\uDDF2\uDDF4\uDDF5]|\uDDF0\uD83C[\uDDEA\uDDEC-\uDDEE\uDDF2\uDDF3\uDDF5\uDDF7\uDDFC\uDDFE\uDDFF]|\uDDF1\uD83C[\uDDE6-\uDDE8\uDDEE\uDDF0\uDDF7-\uDDFB\uDDFE]|\uDDF2\uD83C[\uDDE6\uDDE8-\uDDED\uDDF0-\uDDFF]|\uDDF3\uD83C[\uDDE6\uDDE8\uDDEA-\uDDEC\uDDEE\uDDF1\uDDF4\uDDF5\uDDF7\uDDFA\uDDFF]|\uDDF4\uD83C\uDDF2|\uDDF5\uD83C[\uDDE6\uDDEA-\uDDED\uDDF0-\uDDF3\uDDF7-\uDDF9\uDDFC\uDDFE]|\uDDF6\uD83C\uDDE6|\uDDF7\uD83C[\uDDEA\uDDF4\uDDF8\uDDFA\uDDFC]|\uDDF8\uD83C[\uDDE6-\uDDEA\uDDEC-\uDDF4\uDDF7-\uDDF9\uDDFB\uDDFD-\uDDFF]|\uDDF9\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDED\uDDEF-\uDDF4\uDDF7\uDDF9\uDDFB\uDDFC\uDDFF]|\uDDFA\uD83C[\uDDE6\uDDEC\uDDF2\uDDF3\uDDF8\uDDFE\uDDFF]|\uDDFB\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDEE\uDDF3\uDDFA]|\uDDFC\uD83C[\uDDEB\uDDF8]|\uDDFD\uD83C\uDDF0|\uDDFE\uD83C[\uDDEA\uDDF9]|\uDDFF\uD83C[\uDDE6\uDDF2\uDDFC]|\uDFF3\uFE0F?(?:\u200D(?:\u26A7\uFE0F?|\uD83C\uDF08))?|\uDFF4(?:\u200D\u2620\uFE0F?|\uDB40\uDC67\uDB40\uDC62\uDB40(?:\uDC65\uDB40\uDC6E\uDB40\uDC67|\uDC73\uDB40\uDC63\uDB40\uDC74|\uDC77\uDB40\uDC6C\uDB40\uDC73)\uDB40\uDC7F)?)|\uD83D(?:[\uDC08\uDC26](?:\u200D\u2B1B)?|[\uDC3F\uDCFD\uDD49\uDD4A\uDD6F\uDD70\uDD73\uDD76-\uDD79\uDD87\uDD8A-\uDD8D\uDDA5\uDDA8\uDDB1\uDDB2\uDDBC\uDDC2-\uDDC4\uDDD1-\uDDD3\uDDDC-\uDDDE\uDDE1\uDDE3\uDDE8\uDDEF\uDDF3\uDDFA\uDECB\uDECD-\uDECF\uDEE0-\uDEE5\uDEE9\uDEF0\uDEF3]\uFE0F?|[\uDC42\uDC43\uDC46-\uDC50\uDC66\uDC67\uDC6B-\uDC6D\uDC72\uDC74-\uDC76\uDC78\uDC7C\uDC83\uDC85\uDC8F\uDC91\uDCAA\uDD7A\uDD95\uDD96\uDE4C\uDE4F\uDEC0\uDECC](?:\uD83C[\uDFFB-\uDFFF])?|[\uDC6E\uDC70\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4-\uDEB6](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDD74\uDD90](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?|[\uDC00-\uDC07\uDC09-\uDC14\uDC16-\uDC25\uDC27-\uDC3A\uDC3C-\uDC3E\uDC40\uDC44\uDC45\uDC51-\uDC65\uDC6A\uDC79-\uDC7B\uDC7D-\uDC80\uDC84\uDC88-\uDC8E\uDC90\uDC92-\uDCA9\uDCAB-\uDCFC\uDCFF-\uDD3D\uDD4B-\uDD4E\uDD50-\uDD67\uDDA4\uDDFB-\uDE2D\uDE2F-\uDE34\uDE37-\uDE44\uDE48-\uDE4A\uDE80-\uDEA2\uDEA4-\uDEB3\uDEB7-\uDEBF\uDEC1-\uDEC5\uDED0-\uDED2\uDED5-\uDED7\uDEDC-\uDEDF\uDEEB\uDEEC\uDEF4-\uDEFC\uDFE0-\uDFEB\uDFF0]|\uDC15(?:\u200D\uD83E\uDDBA)?|\uDC3B(?:\u200D\u2744\uFE0F?)?|\uDC41\uFE0F?(?:\u200D\uD83D\uDDE8\uFE0F?)?|\uDC68(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D(?:[\uDC68\uDC69]\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFC-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFD-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFD\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFE])))?))?|\uDC69(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?[\uDC68\uDC69]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D(?:[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?|\uDC69\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?))|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFC-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB\uDFFD-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB-\uDFFD\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB-\uDFFE])))?))?|\uDC6F(?:\u200D[\u2640\u2642]\uFE0F?)?|\uDD75(?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|\uDE2E(?:\u200D\uD83D\uDCA8)?|\uDE35(?:\u200D\uD83D\uDCAB)?|\uDE36(?:\u200D\uD83C\uDF2B\uFE0F?)?)|\uD83E(?:[\uDD0C\uDD0F\uDD18-\uDD1F\uDD30-\uDD34\uDD36\uDD77\uDDB5\uDDB6\uDDBB\uDDD2\uDDD3\uDDD5\uDEC3-\uDEC5\uDEF0\uDEF2-\uDEF8](?:\uD83C[\uDFFB-\uDFFF])?|[\uDD26\uDD35\uDD37-\uDD39\uDD3D\uDD3E\uDDB8\uDDB9\uDDCD-\uDDCF\uDDD4\uDDD6-\uDDDD](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDDDE\uDDDF](?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDD0D\uDD0E\uDD10-\uDD17\uDD20-\uDD25\uDD27-\uDD2F\uDD3A\uDD3F-\uDD45\uDD47-\uDD76\uDD78-\uDDB4\uDDB7\uDDBA\uDDBC-\uDDCC\uDDD0\uDDE0-\uDDFF\uDE70-\uDE7C\uDE80-\uDE88\uDE90-\uDEBD\uDEBF-\uDEC2\uDECE-\uDEDB\uDEE0-\uDEE8]|\uDD3C(?:\u200D[\u2640\u2642]\uFE0F?|\uD83C[\uDFFB-\uDFFF])?|\uDDD1(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1))|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFC-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB\uDFFD-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB-\uDFFD\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB-\uDFFE]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?))?|\uDEF1(?:\uD83C(?:\uDFFB(?:\u200D\uD83E\uDEF2\uD83C[\uDFFC-\uDFFF])?|\uDFFC(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB\uDFFD-\uDFFF])?|\uDFFD(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])?|\uDFFE(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB-\uDFFD\uDFFF])?|\uDFFF(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB-\uDFFE])?))?)/g;
+const zu = () => /[#*0-9]\uFE0F?\u20E3|[\xA9\xAE\u203C\u2049\u2122\u2139\u2194-\u2199\u21A9\u21AA\u231A\u231B\u2328\u23CF\u23ED-\u23EF\u23F1\u23F2\u23F8-\u23FA\u24C2\u25AA\u25AB\u25B6\u25C0\u25FB\u25FC\u25FE\u2600-\u2604\u260E\u2611\u2614\u2615\u2618\u2620\u2622\u2623\u2626\u262A\u262E\u262F\u2638-\u263A\u2640\u2642\u2648-\u2653\u265F\u2660\u2663\u2665\u2666\u2668\u267B\u267E\u267F\u2692\u2694-\u2697\u2699\u269B\u269C\u26A0\u26A7\u26AA\u26B0\u26B1\u26BD\u26BE\u26C4\u26C8\u26CF\u26D1\u26D3\u26E9\u26F0-\u26F5\u26F7\u26F8\u26FA\u2702\u2708\u2709\u270F\u2712\u2714\u2716\u271D\u2721\u2733\u2734\u2744\u2747\u2757\u2763\u27A1\u2934\u2935\u2B05-\u2B07\u2B1B\u2B1C\u2B55\u3030\u303D\u3297\u3299]\uFE0F?|[\u261D\u270C\u270D](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?|[\u270A\u270B](?:\uD83C[\uDFFB-\uDFFF])?|[\u23E9-\u23EC\u23F0\u23F3\u25FD\u2693\u26A1\u26AB\u26C5\u26CE\u26D4\u26EA\u26FD\u2705\u2728\u274C\u274E\u2753-\u2755\u2795-\u2797\u27B0\u27BF\u2B50]|\u26F9(?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|\u2764\uFE0F?(?:\u200D(?:\uD83D\uDD25|\uD83E\uDE79))?|\uD83C(?:[\uDC04\uDD70\uDD71\uDD7E\uDD7F\uDE02\uDE37\uDF21\uDF24-\uDF2C\uDF36\uDF7D\uDF96\uDF97\uDF99-\uDF9B\uDF9E\uDF9F\uDFCD\uDFCE\uDFD4-\uDFDF\uDFF5\uDFF7]\uFE0F?|[\uDF85\uDFC2\uDFC7](?:\uD83C[\uDFFB-\uDFFF])?|[\uDFC3\uDFC4\uDFCA](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDFCB\uDFCC](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDCCF\uDD8E\uDD91-\uDD9A\uDE01\uDE1A\uDE2F\uDE32-\uDE36\uDE38-\uDE3A\uDE50\uDE51\uDF00-\uDF20\uDF2D-\uDF35\uDF37-\uDF7C\uDF7E-\uDF84\uDF86-\uDF93\uDFA0-\uDFC1\uDFC5\uDFC6\uDFC8\uDFC9\uDFCF-\uDFD3\uDFE0-\uDFF0\uDFF8-\uDFFF]|\uDDE6\uD83C[\uDDE8-\uDDEC\uDDEE\uDDF1\uDDF2\uDDF4\uDDF6-\uDDFA\uDDFC\uDDFD\uDDFF]|\uDDE7\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEF\uDDF1-\uDDF4\uDDF6-\uDDF9\uDDFB\uDDFC\uDDFE\uDDFF]|\uDDE8\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDEE\uDDF0-\uDDF5\uDDF7\uDDFA-\uDDFF]|\uDDE9\uD83C[\uDDEA\uDDEC\uDDEF\uDDF0\uDDF2\uDDF4\uDDFF]|\uDDEA\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDED\uDDF7-\uDDFA]|\uDDEB\uD83C[\uDDEE-\uDDF0\uDDF2\uDDF4\uDDF7]|\uDDEC\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEE\uDDF1-\uDDF3\uDDF5-\uDDFA\uDDFC\uDDFE]|\uDDED\uD83C[\uDDF0\uDDF2\uDDF3\uDDF7\uDDF9\uDDFA]|\uDDEE\uD83C[\uDDE8-\uDDEA\uDDF1-\uDDF4\uDDF6-\uDDF9]|\uDDEF\uD83C[\uDDEA\uDDF2\uDDF4\uDDF5]|\uDDF0\uD83C[\uDDEA\uDDEC-\uDDEE\uDDF2\uDDF3\uDDF5\uDDF7\uDDFC\uDDFE\uDDFF]|\uDDF1\uD83C[\uDDE6-\uDDE8\uDDEE\uDDF0\uDDF7-\uDDFB\uDDFE]|\uDDF2\uD83C[\uDDE6\uDDE8-\uDDED\uDDF0-\uDDFF]|\uDDF3\uD83C[\uDDE6\uDDE8\uDDEA-\uDDEC\uDDEE\uDDF1\uDDF4\uDDF5\uDDF7\uDDFA\uDDFF]|\uDDF4\uD83C\uDDF2|\uDDF5\uD83C[\uDDE6\uDDEA-\uDDED\uDDF0-\uDDF3\uDDF7-\uDDF9\uDDFC\uDDFE]|\uDDF6\uD83C\uDDE6|\uDDF7\uD83C[\uDDEA\uDDF4\uDDF8\uDDFA\uDDFC]|\uDDF8\uD83C[\uDDE6-\uDDEA\uDDEC-\uDDF4\uDDF7-\uDDF9\uDDFB\uDDFD-\uDDFF]|\uDDF9\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDED\uDDEF-\uDDF4\uDDF7\uDDF9\uDDFB\uDDFC\uDDFF]|\uDDFA\uD83C[\uDDE6\uDDEC\uDDF2\uDDF3\uDDF8\uDDFE\uDDFF]|\uDDFB\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDEE\uDDF3\uDDFA]|\uDDFC\uD83C[\uDDEB\uDDF8]|\uDDFD\uD83C\uDDF0|\uDDFE\uD83C[\uDDEA\uDDF9]|\uDDFF\uD83C[\uDDE6\uDDF2\uDDFC]|\uDFF3\uFE0F?(?:\u200D(?:\u26A7\uFE0F?|\uD83C\uDF08))?|\uDFF4(?:\u200D\u2620\uFE0F?|\uDB40\uDC67\uDB40\uDC62\uDB40(?:\uDC65\uDB40\uDC6E\uDB40\uDC67|\uDC73\uDB40\uDC63\uDB40\uDC74|\uDC77\uDB40\uDC6C\uDB40\uDC73)\uDB40\uDC7F)?)|\uD83D(?:[\uDC08\uDC26](?:\u200D\u2B1B)?|[\uDC3F\uDCFD\uDD49\uDD4A\uDD6F\uDD70\uDD73\uDD76-\uDD79\uDD87\uDD8A-\uDD8D\uDDA5\uDDA8\uDDB1\uDDB2\uDDBC\uDDC2-\uDDC4\uDDD1-\uDDD3\uDDDC-\uDDDE\uDDE1\uDDE3\uDDE8\uDDEF\uDDF3\uDDFA\uDECB\uDECD-\uDECF\uDEE0-\uDEE5\uDEE9\uDEF0\uDEF3]\uFE0F?|[\uDC42\uDC43\uDC46-\uDC50\uDC66\uDC67\uDC6B-\uDC6D\uDC72\uDC74-\uDC76\uDC78\uDC7C\uDC83\uDC85\uDC8F\uDC91\uDCAA\uDD7A\uDD95\uDD96\uDE4C\uDE4F\uDEC0\uDECC](?:\uD83C[\uDFFB-\uDFFF])?|[\uDC6E\uDC70\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4-\uDEB6](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDD74\uDD90](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?|[\uDC00-\uDC07\uDC09-\uDC14\uDC16-\uDC25\uDC27-\uDC3A\uDC3C-\uDC3E\uDC40\uDC44\uDC45\uDC51-\uDC65\uDC6A\uDC79-\uDC7B\uDC7D-\uDC80\uDC84\uDC88-\uDC8E\uDC90\uDC92-\uDCA9\uDCAB-\uDCFC\uDCFF-\uDD3D\uDD4B-\uDD4E\uDD50-\uDD67\uDDA4\uDDFB-\uDE2D\uDE2F-\uDE34\uDE37-\uDE44\uDE48-\uDE4A\uDE80-\uDEA2\uDEA4-\uDEB3\uDEB7-\uDEBF\uDEC1-\uDEC5\uDED0-\uDED2\uDED5-\uDED7\uDEDC-\uDEDF\uDEEB\uDEEC\uDEF4-\uDEFC\uDFE0-\uDFEB\uDFF0]|\uDC15(?:\u200D\uD83E\uDDBA)?|\uDC3B(?:\u200D\u2744\uFE0F?)?|\uDC41\uFE0F?(?:\u200D\uD83D\uDDE8\uFE0F?)?|\uDC68(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D(?:[\uDC68\uDC69]\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFC-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFD-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFD\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFE])))?))?|\uDC69(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?[\uDC68\uDC69]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D(?:[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?|\uDC69\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?))|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFC-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB\uDFFD-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB-\uDFFD\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB-\uDFFE])))?))?|\uDC6F(?:\u200D[\u2640\u2642]\uFE0F?)?|\uDD75(?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|\uDE2E(?:\u200D\uD83D\uDCA8)?|\uDE35(?:\u200D\uD83D\uDCAB)?|\uDE36(?:\u200D\uD83C\uDF2B\uFE0F?)?)|\uD83E(?:[\uDD0C\uDD0F\uDD18-\uDD1F\uDD30-\uDD34\uDD36\uDD77\uDDB5\uDDB6\uDDBB\uDDD2\uDDD3\uDDD5\uDEC3-\uDEC5\uDEF0\uDEF2-\uDEF8](?:\uD83C[\uDFFB-\uDFFF])?|[\uDD26\uDD35\uDD37-\uDD39\uDD3D\uDD3E\uDDB8\uDDB9\uDDCD-\uDDCF\uDDD4\uDDD6-\uDDDD](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDDDE\uDDDF](?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDD0D\uDD0E\uDD10-\uDD17\uDD20-\uDD25\uDD27-\uDD2F\uDD3A\uDD3F-\uDD45\uDD47-\uDD76\uDD78-\uDDB4\uDDB7\uDDBA\uDDBC-\uDDCC\uDDD0\uDDE0-\uDDFF\uDE70-\uDE7C\uDE80-\uDE88\uDE90-\uDEBD\uDEBF-\uDEC2\uDECE-\uDEDB\uDEE0-\uDEE8]|\uDD3C(?:\u200D[\u2640\u2642]\uFE0F?|\uD83C[\uDFFB-\uDFFF])?|\uDDD1(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1))|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFC-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB\uDFFD-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB-\uDFFD\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB-\uDFFE]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF-\uDDB3\uDDBC\uDDBD]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?))?|\uDEF1(?:\uD83C(?:\uDFFB(?:\u200D\uD83E\uDEF2\uD83C[\uDFFC-\uDFFF])?|\uDFFC(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB\uDFFD-\uDFFF])?|\uDFFD(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])?|\uDFFE(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB-\uDFFD\uDFFF])?|\uDFFF(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB-\uDFFE])?))?)/g;
 D("\\p{Letter}");
 D("\\p{Lowercase_Letter}");
 D("\\p{Uppercase_Letter}");
@@ -3091,7 +3035,7 @@ D("\\p{Cased_Letter}");
 D("\\p{Modifier_Letter}");
 D("\\p{Other_Letter}");
 D("\\p{Mark}");
-const oD = D("\\p{Non_Spacing_Mark}");
+const Zu = D("\\p{Non_Spacing_Mark}");
 D("\\p{Enclosing_Mark}");
 D("\\p{Separator}");
 D("\\p{Space_Separator}");
@@ -3103,7 +3047,7 @@ D("\\p{Currency_Symbol}");
 D("\\p{Modifier_Symbol}");
 D("\\p{Other_Symbol}");
 D("\\p{Number}");
-const cD = D("\\p{Nd}");
+const Wu = D("\\p{Nd}");
 D("\\p{Letter_Number}");
 D("\\p{Other_Number}");
 D("\\p{Punctuation}");
@@ -3120,57 +3064,57 @@ D("\\p{Format}");
 D("\\p{Private_Use}");
 D("\\p{Surrogate}");
 D("\\p{Unassigned}");
-const pD = D(mD()), _D = D("\\p{Common}"), ID = D("\\p{Arabic}"), dD = D("\\p{Armenian}"), bD = D("\\p{Bengali}"), hD = D("\\p{Bopomofo}"), fD = D("\\p{Braille}"), gD = D("\\p{Buhid}"), SD = D("\\p{Canadian_Aboriginal}"), xD = D("\\p{Cherokee}"), mu = D("\\p{Cyrillic}"), yD = D("\\p{Devanagari}"), LD = D("\\p{Ethiopic}"), RD = D("\\p{Georgian}"), wD = D("\\p{Greek}"), TD = D("\\p{Gujarati}"), kD = D("\\p{Gurmukhi}"), ND = D("\\p{Han}"), MD = D("\\p{Hangul}"), OD = D("\\p{Hanunoo}"), PD = D("\\p{Hebrew}"), UD = D("\\p{Hiragana}"), vD = D("\\p{Inherited}"), $D = D("\\p{Kannada}"), GD = D("\\p{Katakana}"), HD = D("\\p{Khmer}"), KD = D("\\p{Lao}"), VD = D("\\p{Latin}"), jD = D("\\p{Limbu}"), YD = D("\\p{Malayalam}"), JD = D("\\p{Mongolian}"), zD = D("\\p{Myanmar}"), ZD = D("\\p{Ogham}"), WD = D("\\p{Oriya}"), qD = D("\\p{Runic}"), QD = D("\\p{Sinhala}"), XD = D("\\p{Syriac}"), u0 = D("\\p{Tagalog}"), D0 = D("\\p{Tagbanwa}"), F0 = D("\\p{TaiLe}"), C0 = D("\\p{Tamil}"), E0 = D("\\p{Telugu}"), A0 = D("\\p{Thaana}"), B0 = D("\\p{Thai}"), a0 = D("\\p{Tibetan}"), n0 = D("\\p{Yi}"), e0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const qu = D(zu()), Qu = D("\\p{Common}"), Xu = D("\\p{Arabic}"), uD = D("\\p{Armenian}"), DD = D("\\p{Bengali}"), FD = D("\\p{Bopomofo}"), CD = D("\\p{Braille}"), ED = D("\\p{Buhid}"), AD = D("\\p{Canadian_Aboriginal}"), BD = D("\\p{Cherokee}"), nu = D("\\p{Cyrillic}"), aD = D("\\p{Devanagari}"), nD = D("\\p{Ethiopic}"), eD = D("\\p{Georgian}"), tD = D("\\p{Greek}"), rD = D("\\p{Gujarati}"), iD = D("\\p{Gurmukhi}"), sD = D("\\p{Han}"), lD = D("\\p{Hangul}"), mD = D("\\p{Hanunoo}"), oD = D("\\p{Hebrew}"), pD = D("\\p{Hiragana}"), cD = D("\\p{Inherited}"), _D = D("\\p{Kannada}"), ID = D("\\p{Katakana}"), dD = D("\\p{Khmer}"), bD = D("\\p{Lao}"), hD = D("\\p{Latin}"), fD = D("\\p{Limbu}"), gD = D("\\p{Malayalam}"), SD = D("\\p{Mongolian}"), xD = D("\\p{Myanmar}"), yD = D("\\p{Ogham}"), LD = D("\\p{Oriya}"), RD = D("\\p{Runic}"), TD = D("\\p{Sinhala}"), kD = D("\\p{Syriac}"), wD = D("\\p{Tagalog}"), ND = D("\\p{Tagbanwa}"), MD = D("\\p{TaiLe}"), OD = D("\\p{Tamil}"), PD = D("\\p{Telugu}"), UD = D("\\p{Thaana}"), $D = D("\\p{Thai}"), GD = D("\\p{Tibetan}"), HD = D("\\p{Yi}"), KD = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  arabic: ID,
-  armenian: dD,
-  bengali: bD,
-  bopomofo: hD,
-  braille: fD,
-  buhid: gD,
-  canadianAboriginal: SD,
-  cherokee: xD,
-  common: _D,
-  cyrillic: mu,
-  devanagari: yD,
-  ethiopic: LD,
-  georgian: RD,
-  greek: wD,
-  gujarati: TD,
-  gurmukhi: kD,
-  han: ND,
-  hangul: MD,
-  hanunoo: OD,
-  hebrew: PD,
-  hiragana: UD,
-  inherited: vD,
-  kannada: $D,
-  katakana: GD,
-  khmer: HD,
-  lao: KD,
-  latin: VD,
-  limbu: jD,
-  malayalam: YD,
-  mongolian: JD,
-  myanmar: zD,
-  ogham: ZD,
-  oriya: WD,
-  runic: qD,
-  sinhala: QD,
-  syriac: XD,
-  tagalog: u0,
-  tagbanwa: D0,
-  taile: F0,
-  tamil: C0,
-  telugu: E0,
-  thaana: A0,
-  thai: B0,
-  tibetan: a0,
-  yi: n0
+  arabic: Xu,
+  armenian: uD,
+  bengali: DD,
+  bopomofo: FD,
+  braille: CD,
+  buhid: ED,
+  canadianAboriginal: AD,
+  cherokee: BD,
+  common: Qu,
+  cyrillic: nu,
+  devanagari: aD,
+  ethiopic: nD,
+  georgian: eD,
+  greek: tD,
+  gujarati: rD,
+  gurmukhi: iD,
+  han: sD,
+  hangul: lD,
+  hanunoo: mD,
+  hebrew: oD,
+  hiragana: pD,
+  inherited: cD,
+  kannada: _D,
+  katakana: ID,
+  khmer: dD,
+  lao: bD,
+  latin: hD,
+  limbu: fD,
+  malayalam: gD,
+  mongolian: SD,
+  myanmar: xD,
+  ogham: yD,
+  oriya: LD,
+  runic: RD,
+  sinhala: TD,
+  syriac: kD,
+  tagalog: wD,
+  tagbanwa: ND,
+  taile: MD,
+  tamil: OD,
+  telugu: PD,
+  thaana: UD,
+  thai: $D,
+  tibetan: GD,
+  yi: HD
 }, Symbol.toStringTag, { value: "Module" }));
-class t0 {
+class vD {
   constructor(F) {
-    this.resolvedScripts = Object.entries(e0).filter((C) => C[1].test(F)).reduce((C, E) => Object.assign(Object.assign({}, C), { [E[0]]: !0 }), {});
+    this.resolvedScripts = Object.entries(KD).filter((C) => C[1].test(F)).reduce((C, E) => Object.assign(Object.assign({}, C), { [E[0]]: !0 }), {});
   }
   singleScript() {
     return Object.keys(this.resolvedScripts).length === 1 ? !0 : [
@@ -3199,18 +3143,18 @@ class t0 {
     ].some((C) => C.every((E) => this.resolvedScripts.hasOwnProperty(E)));
   }
 }
-class r0 {
+class VD {
   constructor() {
-    this.status = G.ZERO_ERROR, this.checks = f.ALL_CHECKS, this.restrictionLevel = g.HIGHLY_RESTRICTIVE;
+    this.status = U.ZERO_ERROR, this.checks = f.ALL_CHECKS, this.restrictionLevel = g.HIGHLY_RESTRICTIVE;
   }
   safeToDisplayAsUnicode(F, C) {
-    this.status = G.ZERO_ERROR, F = F.replace(pD, "a");
+    this.status = U.ZERO_ERROR, F = F.replace(qu, "a");
     let E = this.check(F);
-    return this.status > G.ZERO_ERROR || E & f.ALL_CHECKS || (E &= g.RESTRICTION_LEVEL_MASK, AD.test(F)) ? !1 : E === g.ASCII ? !0 : E === g.SINGLE_SCRIPT_RESTRICTIVE && !aD.test(F) && !nD.test(F) ? !C || !this.isMadeOfLatinAlikeCyrillic(F) : BD.test(F) && !rD.test(F) ? !1 : !ED.some((A) => A.test(F));
+    return this.status > U.ZERO_ERROR || E & f.ALL_CHECKS || (E &= g.RESTRICTION_LEVEL_MASK, Uu.test(F)) ? !1 : E === g.ASCII ? !0 : E === g.SINGLE_SCRIPT_RESTRICTIVE && !Gu.test(F) && !Hu.test(F) ? !C || !this.isMadeOfLatinAlikeCyrillic(F) : $u.test(F) && !Vu.test(F) ? !1 : !Pu.some((A) => A.test(F));
   }
   check(F) {
     let C = 0;
-    const E = new Pu();
+    const E = new ou();
     if (this.checks & f.RESTRICTION_LEVEL) {
       const A = this.getRestrictionLevel(F);
       A > this.restrictionLevel && (C |= f.RESTRICTION_LEVEL), E.restrictionLevel = A;
@@ -3221,34 +3165,34 @@ class r0 {
     }
     if (this.checks & f.CHAR_LIMIT) {
       for (let A = 0; A < F.length; )
-        if (A++, !Fu.test(F[A])) {
+        if (A++, !W.test(F[A])) {
           C |= f.CHAR_LIMIT;
           break;
         }
     }
     if (this.checks & f.INVISIBLE) {
       const A = F.normalize("NFD"), a = A.length;
-      let n, e, i = 0, t = !1, l = [];
+      let n, t, i = 0, e = !1, l = [];
       for (n = 0; n < a; ) {
-        if (e = A.charCodeAt(n), n++, !oD.test(A[n])) {
-          i = 0, t && (l = [], t = !1);
+        if (t = A.charCodeAt(n), n++, !Zu.test(A[n])) {
+          i = 0, e && (l = [], e = !1);
           continue;
         }
         if (i === 0) {
-          i = e;
+          i = t;
           continue;
         }
-        if (t || (l.push(i), t = !0), l.indexOf(e) > -1) {
+        if (e || (l.push(i), e = !0), l.indexOf(t) > -1) {
           C |= f.INVISIBLE;
           break;
         }
-        l.push(e);
+        l.push(t);
       }
     }
     return E.checks = C, E.toCombinedBitmask(this.checks);
   }
   getRestrictionLevel(F) {
-    if (!Array.from(F).every((A) => Fu.test(A) && !lD.test(A)))
+    if (!Array.from(F).every((A) => W.test(A) && !Ju.test(A)))
       return g.UNRESTRICTIVE;
     let C = !0;
     for (let A = 0; A < F.length; A++)
@@ -3256,13 +3200,13 @@ class r0 {
         C = !1;
         break;
       }
-    return C ? g.ASCII : new t0(F).singleScript() ? g.SINGLE_SCRIPT_RESTRICTIVE : g.HIGHLY_RESTRICTIVE;
+    return C ? g.ASCII : new vD(F).singleScript() ? g.SINGLE_SCRIPT_RESTRICTIVE : g.HIGHLY_RESTRICTIVE;
   }
   getNumerics(F) {
     const C = [];
     let E;
     for (let A = 0; A < F.length; A++)
-      if (E = F.charCodeAt(A), cD.test(F[A])) {
+      if (E = F.charCodeAt(A), Wu.test(F[A])) {
         const a = String.fromCharCode(E - parseInt(F[A], 16));
         if (C.includes(a))
           continue;
@@ -3271,25 +3215,25 @@ class r0 {
     return C;
   }
   isMadeOfLatinAlikeCyrillic(F) {
-    const C = Array.from(F).filter((E) => mu.test(E));
-    return C.length > 0 && C.every((E) => eD.test(E));
+    const C = Array.from(F).filter((E) => nu.test(E));
+    return C.length > 0 && C.every((E) => Ku.test(E));
   }
 }
-function l0(u) {
+function JD(u) {
   try {
-    const F = new Ou(u);
-    return i0(F.labels);
+    const F = new mu(u);
+    return jD(F.labels);
   } catch {
     return !1;
   }
 }
-function i0(u) {
-  const F = new r0();
+function jD(u) {
+  const F = new VD();
   F.restrictionLevel = g.ASCII;
-  const C = u[0], E = du.domainToUnicode(C);
+  const C = u[0], E = lu.domainToUnicode(C);
   return C.charAt(0).includes("-") || C.charAt(0).includes("_") || C.charAt(C.length - 1).includes("-") || C.charAt(C.length - 1).includes("_") || C.includes("--") || C === "None" || C === "" || !C || E === "" || !E ? !1 : F.safeToDisplayAsUnicode(E, !0);
 }
 export {
-  l0 as validate
+  JD as validate
 };
-//# sourceMappingURL=ans-validation.js.map
+//# sourceMappingURL=index.js.map
